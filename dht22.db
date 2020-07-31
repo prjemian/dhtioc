@@ -1,0 +1,98 @@
+# EPICS database to hold and average values from DHT22 sensor
+# DHT22 is a temperature and humidity sensor
+
+# This database only requires EPICS base and an external program
+# that writes to "$(P)$(S)temperature" & "$(P)$(S)humidity"
+
+# MACROS
+#   P  EPICS IOC prefix
+#   S  Sensor identifier
+
+# "Smoothed" values are obtained by updates to associated
+# ai records with smoothing factors applied.
+
+# softIoc -m "P=ambodeh:,S=" -d dht22.db
+
+# references:
+# softIoc: https://epics-controls.org/resources-and-support/documents/getting-started/#4_Test_EPICS
+# ao record: https://wiki-ext.aps.anl.gov/epics/index.php/RRM_3-14_Analog_Output
+# ai record: https://wiki-ext.aps.anl.gov/epics/index.php/RRM_3-14_Analog_Input
+# smoothing: https://wiki-ext.aps.anl.gov/epics/index.php/RRM_3-14_Analog_Input#Read_and_Convert_Parameters
+
+record(stringout, "$(P)$(S)description") {
+    field(VAL, "DHT22 sensor")
+}
+
+record(stringout, "$(P)$(S)ymd") {
+    field(DESC, "YYYY-mm-DD")
+}
+
+record(stringout, "$(P)$(S)hms") {
+    field(DESC, "HH:MM:SS")
+}
+
+record(ao, "$(P)$(S)temperature") {
+    field(EGU, "C")
+    field(DESC, "DHT22 temperature")
+    field(PREC, 1)
+    field(FLNK, "$(P)$(S)temperature:s80")
+}
+
+record(ai, "$(P)$(S)temperature:s80") {
+    field(EGU, "C")
+    field(DESC, "DHT22 temperature, k=0.8")
+    field(PREC, 3)
+    field(FLNK, "$(P)$(S)temperature:s95")
+    field(SMOO, 0.80)
+    field(INP, "$(P)$(S)temperature")
+}
+
+record(ai, "$(P)$(S)temperature:s95") {
+    field(EGU, "C")
+    field(DESC, "DHT22 temperature, k=0.95")
+    field(PREC, 3)
+    field(FLNK, "$(P)$(S)temperature:s99")
+    field(SMOO, 0.95)
+    field(INP, "$(P)$(S)temperature")
+}
+
+record(ai, "$(P)$(S)temperature:s99") {
+    field(EGU, "C")
+    field(DESC, "DHT22 temperature, k=0.99")
+    field(PREC, 3)
+    field(SMOO, 0.99)
+    field(INP, "$(P)$(S)temperature")
+}
+
+record(ao, "$(P)$(S)humidity") {
+    field(EGU, "%")
+    field(DESC, "DHT22 relative humidity")
+    field(PREC, 1)
+    field(FLNK, "$(P)$(S)humidity:s80")
+}
+
+record(ai, "$(P)$(S)humidity:s80") {
+    field(EGU, "%")
+    field(DESC, "DHT22 relative humidity, k=0.8")
+    field(PREC, 3)
+    field(FLNK, "$(P)$(S)humidity:s95")
+    field(SMOO, 0.80)
+    field(INP, "$(P)$(S)humidity")
+}
+
+record(ai, "$(P)$(S)humidity:s95") {
+    field(EGU, "%")
+    field(DESC, "DHT22 relative humidity, k=0.95")
+    field(PREC, 3)
+    field(FLNK, "$(P)$(S)humidity:s99")
+    field(SMOO, 0.95)
+    field(INP, "$(P)$(S)humidity")
+}
+
+record(ai, "$(P)$(S)humidity:s99") {
+    field(EGU, "%")
+    field(DESC, "DHT22 relative humidity, k=0.99")
+    field(PREC, 3)
+    field(SMOO, 0.99)
+    field(INP, "$(P)$(S)humidity")
+}
