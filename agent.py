@@ -50,8 +50,9 @@ class Actor:
         self.run_permitted = True
 
         self.dht22 = DHT22(board.D4)
+        self.temperature = 0
+        self.humidity = 0
         self.acquire(first_time=True)
-
         self.action()
 
     def report(self):
