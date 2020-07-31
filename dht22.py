@@ -97,13 +97,12 @@ class Actor:
         self.action()
 
     def report(self):
-        if self.pv_prefix is None or self.pv is None:
-            self.printed_report()
-        else:
+        if self.pv_prefix is not None and self.pv is not None:
             try:
                 self.pv.update(self.temperature, self.humidity)
             except Exception as exc:
                 print(f"{datetime.datetime.now()} {exc}")
+        self.printed_report()
 
     def printed_report(self):
         # report the value to the listener
