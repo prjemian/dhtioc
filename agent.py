@@ -57,8 +57,10 @@ class Actor:
     def report(self):
         # report the value to the listener
         try:
+            t = time.time()
             print(
-                f"{datetime.datetime.now().isoformat(sep=' ')}"
+                f"{t}"
+                f"{datetime.datetime.fromtimestamp(t).isoformat(sep=' ')}"
                 f" {self.temperature:.2f}"
                 f" {self.temperature*9/5+32:.2f}"
                 f" {self.humidity:.2f}"
