@@ -60,7 +60,7 @@ class Actor:
         try:
             t = time.time()
             print(
-                f"{t}"
+                f"{t:.06f}"
                 f" {datetime.datetime.fromtimestamp(t).isoformat()}"
                 f" {self.temperature:.2f}"
                 f" {self.temperature*9/5+32:.2f}"
