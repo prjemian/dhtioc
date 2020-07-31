@@ -45,14 +45,14 @@ class EPICS:
                 return False
         return True
 
-    def update(self, t, h):
+    def update(self, temperature, humidity):
         t = round(time.time())
         ts = datetime.datetime.fromtimestamp(t)
         ymd, hms = ts.isoformat(sep=" ").split()
         self.ymd.put(ymd)
         self.hms.put(hms)
-        self.temperature.put(t)
-        self.humidity.put(h)
+        self.temperature.put(temperature)
+        self.humidity.put(humidity)
 
 
 class DHT22:
