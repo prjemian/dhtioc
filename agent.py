@@ -61,11 +61,13 @@ class Actor:
             t = time.time()
             print(
                 f"{t:.06f}"
-                f" {datetime.datetime.fromtimestamp(t).isoformat()}"
-                f" {self.temperature:.2f}"
-                f" {self.temperature*9/5+32:.2f}"
-                f" {self.humidity:.2f}"
+                f"  {datetime.datetime.fromtimestamp(t).isoformat()}"
+                f"  {self.count:4d}"
+                f"  {self.temperature*9/5+32:.2f}"
+                f"  {self.temperature:.2f}"
+                f"  {self.humidity:.2f}"
             )
+            self.count = 0
         except Exception:
             pass
 
