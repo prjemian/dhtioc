@@ -46,6 +46,8 @@ class EPICS:
         return True
 
     def update(self, temperature, humidity):
+        if None in (temperature, humidity):
+            return
         t = round(time.time())
         ts = datetime.datetime.fromtimestamp(t)
         ymd, hms = ts.isoformat(sep=" ").split()
@@ -161,8 +163,8 @@ def get_options():
         )
     parser.add_argument(
         '-p', '--pv_prefix',
-        action='store', 
-        dest='pv_prefix', 
+        action='store',
+        dest='pv_prefix',
         default=None,
         help="EPICS PV prefix, such as 'ioc:dht22:' (default: None)")
     return parser.parse_args()
