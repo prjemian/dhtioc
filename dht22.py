@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Raspberry Pi support to read DHT-22 sensor and update EPICS PVs
+"""
+
 import adafruit_dht
 import board
 import datetime
@@ -22,6 +26,33 @@ def run_in_thread(func):
     return wrapper
 
 
+class EPICS:
+
+    def __init__(self, prefix)
+        temperature = epics.PV(f"{prefix}temperature")
+        humidity = epics.PV(f"{prefix}humidity")
+        ymd = epics.PV(f"{prefix}ymd")
+        hms = epics.PV(f"{prefix}hms")
+
+    @property
+    def connected(self):
+        attrs = "temperature humidity ymd hms".split()
+        for item in attrs:
+            pv = getattr(self, item):
+            if not pv.wait_for_connection():
+                return False
+        return True
+
+    def update(self, t, h):
+        t = round(time.time())
+        ts = datetime.datetime.fromtimestamp(t)
+        ymd, hms = ts.isoformat(sep=" ").split()
+        self.ymd.put(ymd)
+        self.hms.put(hms)
+        self.temperature.put(t)
+        self.humidity.put(h)
+
+
 class DHT22:
     # https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
     # https://pinout.xyz/
@@ -42,7 +73,7 @@ class Actor:
     sleep_interval = 0.01   # seconds
     smoothing = 0.5
 
-    def __init__(self):
+    def __init__(self, pv_prefix):
         t = time.time()
         self.time_to_sample = t
         self.time_to_report = t
@@ -50,12 +81,27 @@ class Actor:
         self.run_permitted = True
 
         self.dht22 = DHT22(board.D4)
+        self.pv_prefix = pv_prefix
+        if pv_prefix is not None:
+            self.pv = EPICS(pv_prefix)
+            if not self.pv.connected:
+                self.pv = None
+
         self.temperature = 0
         self.humidity = 0
         self.acquire(first_time=True)
         self.action()
 
     def report(self):
+        if self.pv_prefix is None or self.pv is None:
+            self.printed_report()
+        else:
+            try:
+                self.pv.update(self.temperature, self.humidity)
+            except Exception as exc:
+                print(f"{datetime.datetime.now()} {exc}")
+
+    def printed_report(self):
         # report the value to the listener
         try:
             t = time.time()
@@ -105,8 +151,23 @@ class Actor:
         time.sleep(0.1)
 
 
+def get_options():
+    import argparse
+    parser = argparse.ArgumentParser(
+        prog=os.path.split(sys.argv[0])[-1],
+        description=__doc__.strip().splitlines()[0],
+        )
+    parser = subcommand.add_parser(
+        'pv_prefix',
+        default=None,
+        type=str,
+        help="EPICS PV prefix, such as 'ioc:dht22:' (default: None)")
+    return parser.parse_args()
+
+
 def main():
-    actor = Actor()
+    args = get_options()
+    actor = Actor(args.pv_prefix)
     time.sleep(15)
     actor.smoothing = 0.8
 
