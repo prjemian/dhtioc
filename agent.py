@@ -84,7 +84,7 @@ class Actor:
                 self.temperature += (1-self.smoothing) * temperature_c
                 self.humidity *= self.smoothing
                 self.humidity += (1-self.smoothing) * humidity
-        except RuntimeError as exc:
+        except RuntimeError:
             pass
 
     @run_in_thread
