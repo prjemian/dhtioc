@@ -9,6 +9,8 @@ import board
 import datetime
 import epics
 import numpy
+import os
+import sys
 import threading
 import time
 
@@ -28,17 +30,17 @@ def run_in_thread(func):
 
 class EPICS:
 
-    def __init__(self, prefix)
-        temperature = epics.PV(f"{prefix}temperature")
-        humidity = epics.PV(f"{prefix}humidity")
-        ymd = epics.PV(f"{prefix}ymd")
-        hms = epics.PV(f"{prefix}hms")
+    def __init__(self, prefix):
+        self.temperature = epics.PV(f"{prefix}temperature")
+        self.humidity = epics.PV(f"{prefix}humidity")
+        self.ymd = epics.PV(f"{prefix}ymd")
+        self.hms = epics.PV(f"{prefix}hms")
 
     @property
     def connected(self):
         attrs = "temperature humidity ymd hms".split()
         for item in attrs:
-            pv = getattr(self, item):
+            pv = getattr(self, item)
             if not pv.wait_for_connection():
                 return False
         return True
@@ -157,10 +159,11 @@ def get_options():
         prog=os.path.split(sys.argv[0])[-1],
         description=__doc__.strip().splitlines()[0],
         )
-    parser = subcommand.add_parser(
-        'pv_prefix',
+    parser.add_argument(
+        '-p', '--pv_prefix',
+        action='store', 
+        dest='pv_prefix', 
         default=None,
-        type=str,
         help="EPICS PV prefix, such as 'ioc:dht22:' (default: None)")
     return parser.parse_args()
 
