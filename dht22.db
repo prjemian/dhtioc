@@ -38,6 +38,12 @@ record(ao, "$(P)$(S)temperature") {
     field(FLNK, "$(P)$(S)temperature:s80")
 }
 
+record(ao, "$(P)$(S)temperature:trend") {
+    field(EGU, "a.u.")
+    field(DESC, "DHT22 temperature trend")
+    field(PREC, 3)
+}
+
 record(ai, "$(P)$(S)temperature:s80") {
     field(EGU, "C")
     field(DESC, "DHT22 temperature, k=0.8")
@@ -69,6 +75,12 @@ record(ao, "$(P)$(S)humidity") {
     field(DESC, "DHT22 relative humidity")
     field(PREC, 1)
     field(FLNK, "$(P)$(S)humidity:s80")
+}
+
+record(ao, "$(P)$(S)humidity:trend") {
+    field(EGU, "a.u.")
+    field(DESC, "DHT22 relative humidity trend")
+    field(PREC, 3)
 }
 
 record(ai, "$(P)$(S)humidity:s80") {
