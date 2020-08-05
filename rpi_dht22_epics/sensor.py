@@ -6,7 +6,7 @@
 
 import adafruit_dht
 import board
-from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run
+from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run as run_ioc
 import datetime
 from textwrap import dedent
 import time
@@ -25,14 +25,16 @@ class DHT22_IOC(PVGroup):
         dtype=float,
         read_only=True,
         name='humidity',
-        doc="relative humidity (%)",
+        doc="relative humidity",
+        units="%",
         record='ai')
     temperature = pvproperty(
         value=0,
         dtype=float,
         read_only=True,
         name='temperature',
-        doc="temperature (C)",
+        doc="temperature",
+        units="C",
         record='ai')
 
     def __init__(self, *args, data_pin, update_period, **kwargs):
@@ -69,4 +71,4 @@ if __name__ == '__main__':
         data_pin=RPI_PIN_DHT22, 
         update_period=UPDATE_PERIOD, 
         **ioc_options)
-    run(ioc.pvdb, **run_options)
+    run_ioc(ioc.pvdb, **run_options)
