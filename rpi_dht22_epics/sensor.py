@@ -52,6 +52,7 @@ class DHT22_IOC(PVGroup):
         self.period = update_period
         self.smoothing = SMOOTHING_FACTOR
 
+        # internal buffers for signal smoothing
         self._humidity = None
         self._temperature = None
 
