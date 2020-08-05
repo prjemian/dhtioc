@@ -11,7 +11,8 @@ import datetime
 from textwrap import dedent
 import time
 
-UPDATE_PERIOD = 2.0 # s, read the DHT22 at this interval (no faster)
+LATENCY = 0.3  # s
+UPDATE_PERIOD = 2.0 - LATENCY # s, read the DHT22 at this interval (no faster)
 RPI_PIN_DHT22 = board.D4    # DHT22 signal on this RPi pin
 
 
