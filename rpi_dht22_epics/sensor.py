@@ -7,12 +7,11 @@
 import adafruit_dht
 import board
 from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run as run_ioc
-import datetime
 from textwrap import dedent
 import time
 
-LATENCY = 0.3  # s
-UPDATE_PERIOD = 2.0 - LATENCY # s, read the DHT22 at this interval (no faster)
+LOOP_PERIOD = 0.01  # s
+UPDATE_PERIOD = 2.0 # s, read the DHT22 at this interval (no faster)
 RPI_PIN_DHT22 = board.D4    # DHT22 signal on this RPi pin
 
 
@@ -45,23 +44,29 @@ class DHT22_IOC(PVGroup):
 
     @humidity.startup
     async def humidity(self, instance, async_lib):
+        t_next_read = time.time()
         while True:
+            t_next_read = time.time() + self.period
             try:
                 v = self.device.humidity
                 await instance.write(value=v)
             except RuntimeError:
                 pass    # DHT's sometimes fail to read, just keep going
-            await async_lib.library.sleep(self.period)
+            while time.time() < t_next_read:
+                await async_lib.library.sleep(LOOP_PERIOD)
 
     @temperature.startup
     async def temperature(self, instance, async_lib):
+        t_next_read = time.time()
         while True:
+            t_next_read = time.time() + self.period
             try:
                 v = self.device.temperature
                 await instance.write(value=v)
             except RuntimeError:
                 pass    # DHT's sometimes fail to read, just keep going
-            await async_lib.library.sleep(self.period)
+            while time.time() < t_next_read:
+                await async_lib.library.sleep(LOOP_PERIOD)
 
 
 if __name__ == '__main__':
