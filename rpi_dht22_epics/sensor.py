@@ -87,7 +87,7 @@ class DHT22_IOC(PVGroup):
                 await async_lib.library.sleep(LOOP_PERIOD)
 
 
-if __name__ == '__main__':
+def main():
     ioc_options, run_options = ioc_arg_parser(
         default_prefix='dht22:',
         desc=dedent(DHT22_IOC.__doc__))
@@ -96,3 +96,7 @@ if __name__ == '__main__':
         update_period=UPDATE_PERIOD,
         **ioc_options)
     run_ioc(ioc.pvdb, **run_options)
+
+
+if __name__ == '__main__':
+    main()
