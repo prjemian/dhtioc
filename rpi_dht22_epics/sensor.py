@@ -46,7 +46,7 @@ class DHT22_IOC(PVGroup):
     async def humidity(self, instance, async_lib):
         t_next_read = time.time()
         while True:
-            t_next_read = time.time() + self.period
+            t_next_read += self.period
             try:
                 v = self.device.humidity
                 await instance.write(value=v)
@@ -59,7 +59,7 @@ class DHT22_IOC(PVGroup):
     async def temperature(self, instance, async_lib):
         t_next_read = time.time()
         while True:
-            t_next_read = time.time() + self.period
+            t_next_read += self.period
             try:
                 v = self.device.temperature
                 await instance.write(value=v)
