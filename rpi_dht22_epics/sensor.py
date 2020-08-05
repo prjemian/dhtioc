@@ -13,6 +13,15 @@ import time
 LOOP_PERIOD = 0.01  # s
 UPDATE_PERIOD = 2.0 # s, read the DHT22 at this interval (no faster)
 RPI_PIN_DHT22 = board.D4    # DHT22 signal on this RPi pin
+SMOOTHING_FACTOR = 0.6     # factor between 0 and 1, higher is smoother
+
+
+def smooth(reading, factor, previous):
+    if previous is None:
+        value = reading
+    else:
+        value = factor*previous + (1-factor)*reading
+    return value
 
 
 class DHT22_IOC(PVGroup):
@@ -41,6 +50,10 @@ class DHT22_IOC(PVGroup):
         super().__init__(*args, **kwargs)
         self.device = adafruit_dht.DHT22(data_pin)
         self.period = update_period
+        self.smoothing = SMOOTHING_FACTOR
+
+        self._humidity = None
+        self._temperature = None
 
     @humidity.startup
     async def humidity(self, instance, async_lib):
@@ -48,10 +61,12 @@ class DHT22_IOC(PVGroup):
         while True:
             t_next_read += self.period
             try:
-                v = self.device.humidity
-                await instance.write(value=v)
+                raw = self.device.humidity
+                self._humidity = smooth(raw, self.smoothing, self._humidity)
+                await instance.write(value=self._humidity)
             except RuntimeError:
                 pass    # DHT's sometimes fail to read, just keep going
+
             while time.time() < t_next_read:
                 await async_lib.library.sleep(LOOP_PERIOD)
 
@@ -61,10 +76,12 @@ class DHT22_IOC(PVGroup):
         while True:
             t_next_read += self.period
             try:
-                v = self.device.temperature
-                await instance.write(value=v)
+                raw = self.device.temperature
+                self._temperature = smooth(raw, self.smoothing, self._temperature)
+                await instance.write(value=self._temperature)
             except RuntimeError:
                 pass    # DHT's sometimes fail to read, just keep going
+
             while time.time() < t_next_read:
                 await async_lib.library.sleep(LOOP_PERIOD)
 
@@ -74,7 +91,7 @@ if __name__ == '__main__':
         default_prefix='dht22:',
         desc=dedent(DHT22_IOC.__doc__))
     ioc = DHT22_IOC(
-        data_pin=RPI_PIN_DHT22, 
-        update_period=UPDATE_PERIOD, 
+        data_pin=RPI_PIN_DHT22,
+        update_period=UPDATE_PERIOD,
         **ioc_options)
     run_ioc(ioc.pvdb, **run_options)
