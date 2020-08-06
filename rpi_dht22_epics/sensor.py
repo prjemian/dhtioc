@@ -37,13 +37,13 @@ class Trend:
         self.cache = {k: None for k in [0.8, 0.9, 0.95, 0.98, 0.99]}
         self.stats = StatsReg.StatsRegClass()
         self.trend = None
-    
+
     def compute(self, reading):
         self.stats.Clear()
         for factor in self.cache.keys():
             self.cache[factor] = smooth(reading, factor, self.cache[factor])
             self.stats.Add(1-factor, self.cache[factor])
-    
+
     @property
     def slope(self):
         raw = self.stats.LinearRegression()[-1]
@@ -104,11 +104,11 @@ class DHT22_IOC(PVGroup):
 
         # internal buffers for trending & signal smoothing
         self._humidity = None
-        self._humidity_trend_calc = Trend()
+        self._humidity_trend = Trend()
         self._set_humidity_trend = False
 
         self._temperature = None
-        self._temperature_trend_calc = Trend()
+        self._temperature_trend = Trend()
         self._set_temperature_f = False
         self._set_temperature_trend = False
 
@@ -121,7 +121,7 @@ class DHT22_IOC(PVGroup):
                 raw = self.device.humidity
                 self._humidity = smooth(raw, self.smoothing, self._humidity)
                 await instance.write(value=self._humidity)
-                self._humidity_trend_calc.compute(raw)
+                self._humidity_trend.compute(raw)
                 self._set_humidity_trend = True
             except RuntimeError:
                 pass    # DHT's sometimes fail to read, just keep going
@@ -133,7 +133,7 @@ class DHT22_IOC(PVGroup):
     async def humidity_trend(self, instance, async_lib):
         while True:
             if self._set_humidity_trend:
-                await instance.write(value=self._humidity_trend_calc.slope)
+                await instance.write(value=self._humidity_trend.slope)
                 self._set_humidity_trend = False
             await async_lib.library.sleep(INNER_LOOP_SLEEP)
 
@@ -146,7 +146,7 @@ class DHT22_IOC(PVGroup):
                 raw = self.device.temperature
                 self._temperature = smooth(raw, self.smoothing, self._temperature)
                 await instance.write(value=self._temperature)
-                self._temperature_trend_calc.compute(raw)
+                self._temperature_trend.compute(raw)
                 self._set_temperature_trend = True
                 self._set_temperature_f = True
             except RuntimeError:
@@ -168,7 +168,7 @@ class DHT22_IOC(PVGroup):
     async def temperature_trend(self, instance, async_lib):
         while True:
             if self._set_temperature_trend:
-                await instance.write(value=self._temperature_trend_calc.slope)
+                await instance.write(value=self._temperature_trend.slope)
                 self._set_temperature_trend = False
             await async_lib.library.sleep(INNER_LOOP_SLEEP)
 
