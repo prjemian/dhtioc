@@ -41,7 +41,7 @@ class Trend:
         self.stats.Clear()
         for factor in self.cache.keys():
             self.cache[factor] = smooth(reading, factor, self.cache[factor])
-            self.stats.Add(factor, self.cache[factor])
+            self.stats.Add(1-factor, self.cache[factor])
     
     @property
     def slope(self):
