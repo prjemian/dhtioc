@@ -30,7 +30,6 @@ Source code documentation
 
 
 import math
-import numpy as np
 import os
 import sys
 
@@ -302,6 +301,7 @@ def __selftest():
     http://www.real-statistics.com/regression/regression-analysis/
     http://www.real-statistics.com/regression/deming-regression/deming-regression-basic-concepts/
     """
+    import numpy as np
 
     print(f"{__selftest.__doc__.strip().splitlines()[0]}")
     print("---------------------------------------")
