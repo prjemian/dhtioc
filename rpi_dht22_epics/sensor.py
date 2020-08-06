@@ -10,7 +10,7 @@ from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run as run_ioc
 from textwrap import dedent
 import time
 
-LOOP_PERIOD = 0.01  # s
+INNER_LOOP_SLEEP = 0.01  # s
 UPDATE_PERIOD = 2.0 # s, read the DHT22 at this interval (no faster)
 RPI_PIN_DHT22 = board.D4    # DHT22 signal on this RPi pin
 SMOOTHING_FACTOR = 0.6     # factor between 0 and 1, higher is smoother
@@ -78,7 +78,7 @@ class DHT22_IOC(PVGroup):
                 pass    # DHT's sometimes fail to read, just keep going
 
             while time.time() < t_next_read:
-                await async_lib.library.sleep(LOOP_PERIOD)
+                await async_lib.library.sleep(INNER_LOOP_SLEEP)
 
     @temperature.startup
     async def temperature(self, instance, async_lib):
@@ -94,14 +94,16 @@ class DHT22_IOC(PVGroup):
                 pass    # DHT's sometimes fail to read, just keep going
 
             while time.time() < t_next_read:
-                await async_lib.library.sleep(LOOP_PERIOD)
+                await async_lib.library.sleep(INNER_LOOP_SLEEP)
 
     @temperature_f.startup
     async def temperature_f(self, instance, async_lib):
         while True:
             if self._set_temperature_f:
-                await instance.write(value=self._temperature*9/5+32)
+                if self._temperature is not None:
+                    await instance.write(value=self._temperature*9/5+32)
                 self._set_temperature_f = False
+            await async_lib.library.sleep(INNER_LOOP_SLEEP)
 
 
 def main():
