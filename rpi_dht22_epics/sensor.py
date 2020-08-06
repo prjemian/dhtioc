@@ -45,6 +45,14 @@ class DHT22_IOC(PVGroup):
         doc="temperature",
         units="C",
         record='ai')
+    temperature_f = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='temperature:F',
+        doc="temperature",
+        units="F",
+        record='ai')
 
     def __init__(self, *args, data_pin, update_period, **kwargs):
         super().__init__(*args, **kwargs)
@@ -55,6 +63,7 @@ class DHT22_IOC(PVGroup):
         # internal buffers for signal smoothing
         self._humidity = None
         self._temperature = None
+        self._set_temperature_f = False
 
     @humidity.startup
     async def humidity(self, instance, async_lib):
@@ -80,11 +89,19 @@ class DHT22_IOC(PVGroup):
                 raw = self.device.temperature
                 self._temperature = smooth(raw, self.smoothing, self._temperature)
                 await instance.write(value=self._temperature)
+                self._set_temperature_f = True
             except RuntimeError:
                 pass    # DHT's sometimes fail to read, just keep going
 
             while time.time() < t_next_read:
                 await async_lib.library.sleep(LOOP_PERIOD)
+
+    @temperature_f.startup
+    async def temperature_f(self, instance, async_lib):
+        while True:
+            if self._set_temperature_f:
+                await instance.write(value=self._temperature*9/5+32)
+                self._set_temperature_f = False
 
 
 def main():
