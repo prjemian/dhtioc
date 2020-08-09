@@ -36,8 +36,12 @@ sudo update-alternatives --config python
 # need module adafruit_dht
 # https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
 pip3 install RPI.GPIO adafruit-blinka
-pip3 install adafruit-circuitpython-dht
-sudo apt-get install -y libgpiod2
+# do NOT install this package!
+# NO # pip3 install adafruit-circuitpython-dht
+# sudo apt-get install -y libgpiod2
+# see: https://github.com/prjemian/rpi_dht22/issues/12
+# instead:
+pip3 install Adafruit_DHT
 
 # need module caproto
 pip3 install caproto  --no-warn-script-location
