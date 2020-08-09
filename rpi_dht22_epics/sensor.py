@@ -23,6 +23,10 @@ humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 4)
 """
 
 
+def C2F(celsius):
+    return celsius * 9 / 5 + 32
+
+
 def run_in_thread(func):
     """
     (decorator) run ``func`` in thread
@@ -126,6 +130,13 @@ class DHT_IOC(PVGroup):
         doc="relative humidity",
         units="%",
         record='ai')
+    humidity_raw = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='humidity:raw',
+        doc="relative humidity: most recent reading",
+        record='ai')
     humidity_trend = pvproperty(
         value=0,
         dtype=float,
@@ -147,6 +158,22 @@ class DHT_IOC(PVGroup):
         read_only=True,
         name='temperature:F',
         doc="temperature",
+        units="F",
+        record='ai')
+    temperature_raw = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='temperature:raw',
+        doc="temperature: most recent reading",
+        units="C",
+        record='ai')
+    temperature_f_raw = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='temperature:F:raw',
+        doc="temperature: most recent reading",
         units="F",
         record='ai')
     temperature_trend = pvproperty(
@@ -189,6 +216,17 @@ class DHT_IOC(PVGroup):
             while time.time() < t_next_read:
                 await async_lib.library.sleep(INNER_LOOP_SLEEP)
 
+    @humidity_raw.startup
+    async def humidity_raw(self, instance, async_lib):
+        t_next_read = time.time()
+        while True:
+            t_next_read += self.period
+            if self.device.ready:
+                await instance.write(value=self.device.humidity)
+
+            while time.time() < t_next_read:
+                await async_lib.library.sleep(INNER_LOOP_SLEEP)
+
     @humidity_trend.startup
     async def humidity_trend(self, instance, async_lib):
         while True:
@@ -213,14 +251,36 @@ class DHT_IOC(PVGroup):
             while time.time() < t_next_read:
                 await async_lib.library.sleep(INNER_LOOP_SLEEP)
 
+    @temperature_raw.startup
+    async def temperature_raw(self, instance, async_lib):
+        t_next_read = time.time()
+        while True:
+            t_next_read += self.period
+            if self.device.ready:
+                await instance.write(value=self.device.temperature)
+
+            while time.time() < t_next_read:
+                await async_lib.library.sleep(INNER_LOOP_SLEEP)
+
     @temperature_f.startup
     async def temperature_f(self, instance, async_lib):
         while True:
             if self._set_temperature_f:
                 if self._temperature is not None:
-                    await instance.write(value=self._temperature*9/5+32)
+                    await instance.write(value=C2F(self._temperature))
                 self._set_temperature_f = False
             await async_lib.library.sleep(INNER_LOOP_SLEEP)
+
+    @temperature_f_raw.startup
+    async def temperature_f_raw(self, instance, async_lib):
+        t_next_read = time.time()
+        while True:
+            t_next_read += self.period
+            if self.device.ready:
+                await instance.write(value=C2F(self.device.temperature))
+
+            while time.time() < t_next_read:
+                await async_lib.library.sleep(INNER_LOOP_SLEEP)
 
     @temperature_trend.startup
     async def temperature_trend(self, instance, async_lib):
