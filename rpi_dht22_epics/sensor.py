@@ -5,6 +5,7 @@
 # https://pinout.xyz/
 
 import Adafruit_DHT
+import atexit
 from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run as run_ioc
 import StatsReg
 from textwrap import dedent
@@ -200,6 +201,12 @@ class DHT_IOC(PVGroup):
         self._temperature_trend = Trend()
         self._set_temperature_f = False
         self._set_temperature_trend = False
+
+    @atexit.register
+    def shutdown_dht_device(self):
+        # TODO: shutdown the threaded task
+        print(f"deleting DHT device")
+        del self.device
 
     @humidity.startup
     async def humidity(self, instance, async_lib):
