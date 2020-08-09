@@ -205,7 +205,6 @@ class DHT_IOC(PVGroup):
 
         atexit.register(self.shutdown_dht_device)
 
-    @atexit.register
     def shutdown_dht_device(self):
         "shutdown the DHT sensor"
         print(f"stopping DHT sensor")
