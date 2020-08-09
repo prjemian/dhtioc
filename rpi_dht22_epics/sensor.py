@@ -309,6 +309,12 @@ def main():
         data_pin=RPI_DHT_PIN,
         update_period=UPDATE_PERIOD,
         **ioc_options)
+
+    def killer(ioc):
+        print("deleting IOC object")
+        del ioc
+
+    atexit.register(killer, ioc)
     run_ioc(ioc.pvdb, **run_options)
 
 
