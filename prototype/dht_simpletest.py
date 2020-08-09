@@ -7,7 +7,6 @@
 import adafruit_dht
 import board
 import datetime
-import epics
 import time
 
 # Initial the dht device, with data pin connected to:
