@@ -35,7 +35,10 @@ sudo update-alternatives --config python
 # install python modules to support our Python code
 # need module adafruit_dht
 # https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
-pip3 install RPI.GPIO adafruit-blinka adafruit_dht
+pip3 install RPI.GPIO adafruit-blinka
+pip3 install adafruit-circuitpython-dht
+sudo apt-get install libgpiod2
+
 # need module caproto
 pip3 install caproto  --no-warn-script-location
 
@@ -43,4 +46,5 @@ mkdir ~/Documents
 cd ~/Documents
 git clone https://github.com/prjemian/rpi_dht22
 cd rpi_dht22/rpi_dht22_epics/
-python3 ./sensor.py -h
+./sensor.py -h
+./sensor.py --list-pvs --prefix `hostname`:

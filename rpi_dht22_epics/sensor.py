@@ -4,7 +4,7 @@
 # https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
 # https://pinout.xyz/
 
-import Adafruit_DHT
+import adafruit_dht
 import board
 from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run as run_ioc
 import StatsReg
@@ -97,7 +97,7 @@ class DHT22_IOC(PVGroup):
 
     def __init__(self, *args, data_pin, update_period, **kwargs):
         super().__init__(*args, **kwargs)
-        self.device = Adafruit_DHT.DHT22(data_pin)
+        self.device = adafruit_dht.DHT22(data_pin)
         self.period = update_period
         self.smoothing = SMOOTHING_FACTOR
         self.trend_smoothing = 0.995    # reduces noise
