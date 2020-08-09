@@ -4,20 +4,53 @@
 # https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
 # https://pinout.xyz/
 
-import adafruit_dht
-import board
+import Adafruit_DHT
 from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run as run_ioc
 import StatsReg
 from textwrap import dedent
+import threading
 import time
 
-INNER_LOOP_SLEEP = 0.01  # s
-UPDATE_PERIOD = 2.0 # s, read the DHT22 at this interval (no faster)
-RPI_PIN_DHT22 = board.D4    # DHT22 signal on this RPi pin
-SMOOTHING_FACTOR = 0.6     # factor between 0 and 1, higher is smoother
+INNER_LOOP_SLEEP = 0.01     # s
+UPDATE_PERIOD = 2.0         # s, read the DHT22 at this interval (no faster)
+RPI_DHT_MODEL = 22          # type of DHT (11, 22, ...)
+RPI_DHT_PIN = 4             # DHT22 signal connected to this RPi pin
+SMOOTHING_FACTOR = 0.6      # factor between 0 and 1, higher is smoother
+
+"""
+import Adafruit_DHT
+humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 4)
+"""
+
+
+def run_in_thread(func):
+    """
+    (decorator) run ``func`` in thread
+    USAGE::
+       @run_in_thread
+       def progress_reporting():
+           logger.debug("progress_reporting is starting")
+           # ...
+       #...
+       progress_reporting()   # runs in separate thread
+       #...
+    """
+    def wrapper(*args, **kwargs):
+        thread = threading.Thread(target=func, args=args, kwargs=kwargs)
+        thread.start()
+        return thread
+    return wrapper
 
 
 def smooth(reading, factor, previous):
+    """
+    apply smoothing function
+
+    ::
+
+        smoothed = k*raw + (1-k)*previous
+
+    """
     if previous is None:
         value = reading
     else:
@@ -51,7 +84,36 @@ class Trend:
         return self.trend
 
 
-class DHT22_IOC(PVGroup):
+class DHT_Sensor:
+    """
+    Read from the Digital Humidity & Termperature sensor and cache the raw values
+    """
+
+    def __init__(self, sensor=None, data_pin=None, update_period=None):
+        self.sensor = sensor or Adafruit_DHT.DHT22
+        self.pin = data_pin or 4
+        self.update_period = update_period or UPDATE_PERIOD
+        self.humidity = None
+        self.temperature = None
+        self.ready = False
+
+        self.read_in_background_thread()
+
+    def read(self):
+        self.humidity, self.temperature = Adafruit_DHT.read_retry(self.sensor, self.pin)
+        self.ready = True
+
+    @run_in_thread
+    def read_in_background_thread(self):
+        while True:
+            try:
+                self.read()
+            except Exception as exc:    # anticipate occasional trouble
+                print(str(exc))
+            time.sleep(self.update_period)
+
+
+class DHT_IOC(PVGroup):
     """
     EPICS server (IOC) with humidity & temperature (read-only) PVs
     """
@@ -95,9 +157,9 @@ class DHT22_IOC(PVGroup):
         doc="trend in temperature",
         record='ai')
 
-    def __init__(self, *args, data_pin, update_period, **kwargs):
+    def __init__(self, *args, sensor, data_pin, update_period, **kwargs):
         super().__init__(*args, **kwargs)
-        self.device = adafruit_dht.DHT22(data_pin)
+        self.device = DHT_Sensor(sensor, data_pin, update_period)
         self.period = update_period
         self.smoothing = SMOOTHING_FACTOR
         self.trend_smoothing = 0.995    # reduces noise
@@ -117,14 +179,12 @@ class DHT22_IOC(PVGroup):
         t_next_read = time.time()
         while True:
             t_next_read += self.period
-            try:
+            if self.device.ready:
                 raw = self.device.humidity
                 self._humidity = smooth(raw, self.smoothing, self._humidity)
                 await instance.write(value=self._humidity)
                 self._humidity_trend.compute(raw)
                 self._set_humidity_trend = True
-            except RuntimeError:
-                pass    # DHT's sometimes fail to read, just keep going
 
             while time.time() < t_next_read:
                 await async_lib.library.sleep(INNER_LOOP_SLEEP)
@@ -142,15 +202,13 @@ class DHT22_IOC(PVGroup):
         t_next_read = time.time()
         while True:
             t_next_read += self.period
-            try:
+            if self.device.ready:
                 raw = self.device.temperature
                 self._temperature = smooth(raw, self.smoothing, self._temperature)
                 await instance.write(value=self._temperature)
                 self._temperature_trend.compute(raw)
                 self._set_temperature_trend = True
                 self._set_temperature_f = True
-            except RuntimeError:
-                pass    # DHT's sometimes fail to read, just keep going
 
             while time.time() < t_next_read:
                 await async_lib.library.sleep(INNER_LOOP_SLEEP)
@@ -175,10 +233,11 @@ class DHT22_IOC(PVGroup):
 
 def main():
     ioc_options, run_options = ioc_arg_parser(
-        default_prefix='dht22:',
-        desc=dedent(DHT22_IOC.__doc__))
-    ioc = DHT22_IOC(
-        data_pin=RPI_PIN_DHT22,
+        default_prefix='dht:',
+        desc=dedent(DHT_IOC.__doc__))
+    ioc = DHT_IOC(
+        sensor=RPI_DHT_MODEL,
+        data_pin=RPI_DHT_PIN,
         update_period=UPDATE_PERIOD,
         **ioc_options)
     run_ioc(ioc.pvdb, **run_options)
