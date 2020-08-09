@@ -101,6 +101,7 @@ class DHT_Sensor:
         self.humidity = None
         self.temperature = None
         self.ready = False
+        self.keep_background_thread_running = True
 
         self.read_in_background_thread()
 
@@ -110,7 +111,7 @@ class DHT_Sensor:
 
     @run_in_thread
     def read_in_background_thread(self):
-        while True:
+        while self.keep_background_thread_running:
             try:
                 self.read()
             except Exception as exc:    # anticipate occasional trouble
@@ -205,8 +206,8 @@ class DHT_IOC(PVGroup):
     @atexit.register
     def shutdown_dht_device(self):
         # TODO: shutdown the threaded task
-        print(f"deleting DHT device")
-        del self.device
+        print(f"stopping DHT device background thread")
+        self.device.keep_background_thread_running = False
 
     @humidity.startup
     async def humidity(self, instance, async_lib):
