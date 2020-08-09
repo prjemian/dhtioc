@@ -101,7 +101,7 @@ class DHT_Sensor:
         self.humidity = None
         self.temperature = None
         self.ready = False
-        self.run_permit = True
+        self.run_permitted = True
 
         self.read_in_background_thread()
 
@@ -111,7 +111,7 @@ class DHT_Sensor:
 
     @run_in_thread
     def read_in_background_thread(self):
-        while self.run_permit:
+        while self.run_permitted:
             try:
                 self.read()
             except Exception as exc:    # anticipate occasional trouble
@@ -208,7 +208,7 @@ class DHT_IOC(PVGroup):
     def shutdown_dht_device(self):
         "shutdown the DHT sensor"
         print(f"stopping DHT sensor")
-        self.device.run_permit = False
+        self.device.run_permitted = False
 
     @humidity.startup
     async def humidity(self, instance, async_lib):
