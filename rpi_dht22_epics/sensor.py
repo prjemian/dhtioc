@@ -18,11 +18,6 @@ RPI_DHT_MODEL = 22          # type of DHT (11, 22, ...)
 RPI_DHT_PIN = 4             # DHT22 signal connected to this RPi pin
 SMOOTHING_FACTOR = 0.6      # factor between 0 and 1, higher is smoother
 
-"""
-import Adafruit_DHT
-humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT22, 4)
-"""
-
 
 def C2F(celsius):
     return celsius * 9 / 5 + 32
