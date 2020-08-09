@@ -4,7 +4,7 @@
 # https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
 # https://pinout.xyz/
 
-import adafruit_dht
+import Adafruit_DHT
 import board
 from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run as run_ioc
 import StatsReg
