@@ -1,7 +1,6 @@
 Installation
 ============
 
-1. initial configuration
 1. Initial configuration of the RPi
 1. Installation of required libraries
 1. Installation of the project code
@@ -15,11 +14,11 @@ There are several steps to configure a new RaspberryPi for use.
 1. Connect a DHT22 sensor to the RPi
 1. Prepare the Operating System media
 1. Boot the RPi
+1. Pick a unique host name
 1. ``raspi-config``
 1. Apply Operating system updates
 1. Enable the hardware interfaces used by this project
 1. Make *Python v3* be the default ``python``
-1. Change the host name
 1. Reboot
 
 Connect the DHT22 sensor
@@ -33,12 +32,14 @@ TODO: pictures
 Prepare the Operating System media
 ----------------------------------
 
-1. OS Media choice: micro SD card, 4 GB (larger is not needed for this project but works fine)
-1. flash a new RaspberryPi OS Lite onto a micro SD card (Balena Etcher recommended)
+1. OS Media choice: micro SD card, 4 GB (larger is not needed for this project but works fine, takes longer to flash AND backup, takes more space to backup)
+1. flash a new Raspberry Pi OS Lite onto a micro SD card (Balena Etcher recommended)
 1. enable SSH login: create empty ``ssh`` file on `boot` partition
 1. configure WiFi: create ``wpa_supplicant.conf`` file on `boot` partition per https://desertbot.io/blog/headless-raspberry-pi-4-ssh-wifi-setup
-1. Enable the hardware interfaces used by this project
 1. Make *Python v3* be the default `python` (python v2 is EOL starting 2020).
+
+* https://www.raspberrypi.org/downloads/
+* https://www.balena.io/etcher/
 
 Boot the RPi
 ------------
@@ -47,17 +48,37 @@ Boot the RPi
 1. identify new RPi IP number on your subnet and login: ``ssh pi@new.I.P.number``
 1. password is ``raspberry`` until you change it (highly recommended)
 
+Pick a unique host name
+-----------------------
+
+If you plan on having more than one RPi on your local subnet,
+then you should give a unique to each and every one of them.  You can
+be creative, or mundane.  Here, we name our pi based on its Serial
+number (from ``/proc/cpuinfo``).  We'll start with ``rpi`` (to make the
+host name recognizable), then pick the last four characters
+of the serial number, expecting that to make a unique name::
+
+    echo "Suggested host name: rpi$(cat /proc/cpuinfo  | grep Serial | tail -c 5)"
+
+Use this name in ``raspi-config`` below.
+
 raspi-config
 ------------
 
 Run ``sudo raspi-config`` and configure these settings:
 
 * 1 change password for user ``pi``
-* 3 Localisation Options: I2 Change Timezone -- (if not set in ``wpa_supplicant.conf`` file)
-* 4 Interfacing Options: P4 SPI -- **Yes**
-* 4 Interfacing Options: P5 I2C -- **Yes**
-* 4 Interfacing Options: P8 Remote GPIO -- **No**
+* 2 Network Options: I2 Change: N1 Hostname -- pick a unique name, see suggestion above
+* 4 Localisation Options: I2 Change Timezone -- (if not set in ``wpa_supplicant.conf`` file)
+* 5 Interfacing Options: P4 SPI -- **Yes**
+* 5 Interfacing Options: P5 I2C -- **Yes**
+* 5 Interfacing Options: P8 Remote GPIO -- **No**
 * 8 Update -- select it
+
+You may be prompted to reboot now.  Probably best to reboot if you changed the hostname.
+
+In different versions of RaspberryPi OS and ``raspi-config``, these
+settings may be moved to other submenus.  You might have to hunt for them.
 
 Apply Operating system updates
 ------------------------------
@@ -68,23 +89,9 @@ packages with available upgrades) succeeds::
 
     sudo apt-get update && sudo apt-get upgrade -y
 
-Enable the hardware interfaces used by this project
----------------------------------------------------
-
-Enable the _I2C_ and _SPI_ interfaces::
-
-    sudo apt-get install -y python3-smbus i2c-tools
-
-.. TODO: How to enable loading of I2C kernel module from command line?
-   # see: https://www.instructables.com/id/How-to-enable-I2C-on-RaspberryPI/ (both I2C & SPI)
-
-After a reboot, this command will show any I2C or SPI devices in the system::
-
-    ls -l /dev/{i2c,spi}*
-
-After a reboot, any i2c-connected devices will report their address here::
-
-    sudo i2cdetect -y 1
+This step could take some time (5-60 or more), depending on how
+many updates have been released since your download of the OS image
+was released.
 
 Make *Python v3* be the default ``python``
 ------------------------------------------
@@ -98,36 +105,30 @@ to be called when we type ``python``.  Here's how to make that happen:
     sudo pip3 install --upgrade setuptools
     sudo update-alternatives --install /usr/bin/python python $(which python2) 1
     sudo update-alternatives --install /usr/bin/python python $(which python3) 2
-    # TODO: next line requires a keyboard response -- Is there an alternative?
-    # --config asks the user for response.  Is this step needed or is default already made?
-    sudo update-alternatives --config python
-
-Change the host name
---------------------
-
-If you plan on having more than one RaspberryPi on your local subnet,
-then you should give a unique to each and every one of them.  You can
-be creative, or mundane.  Here, we name our pi based on its Serial
-number (from ``/proc/cpuinfo``).  We'll start with ``rpi`` (to make the
-host name recognizable), then pick the last four characters
-of the serial number, expecting that to make a unique name::
-
-    export hn=$(cat /proc/cpuinfo  | grep Serial | tail -c 5)
-    sudo hostname rpi${hn}
-
-This takes effect right away (confirm with command: ``hostname``)
-**BUT** the ``HOSTNAME`` environment variable is not updated until the
-next reboot.  But we can do that now::
-
-    export HOSTNAME=$(hostname)
+    sudo ln -f -s $(which python3) /etc/alternatives/python
+    sudo ln -f -s /etc/alternatives/python /usr/bin/python
+    # or this interactive method
+    #   sudo update-alternatives --config python
 
 Reboot
 ------
 
-Finally, after all these steps, reboot the RPi.
+Finally, after all these steps, reboot the RPi.  ``sudo reboot``
 
 Installation of required libraries
 **********************************
+
+Enable the _I2C_ and _SPI_ interfaces::
+
+    sudo apt-get install -y python3-smbus i2c-tools
+
+This command will show any I2C or SPI devices in the system::
+
+    ls -l /dev/{i2c,spi}*
+
+Any i2c-connected devices will report their address here::
+
+    sudo i2cdetect -y 1
 
 ::
 
