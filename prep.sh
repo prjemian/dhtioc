@@ -20,8 +20,8 @@ sudo i2cdetect -y 1
 # after a reboot, any I2C or SPI devices will show up here
 ls -l /dev/{i2c,spi}*
 
-sudo apt update
-sudo apt upgrade -y
+sudo apt-get update
+sudo apt-get upgrade -y
 
 # make python3 the default python
 sudo apt-get install -y python3 git python3-pip
@@ -37,7 +37,7 @@ sudo update-alternatives --config python
 # https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
 pip3 install RPI.GPIO adafruit-blinka
 pip3 install adafruit-circuitpython-dht
-sudo apt-get install libgpiod2
+sudo apt-get install -y libgpiod2
 
 # need module caproto
 pip3 install caproto  --no-warn-script-location
@@ -47,4 +47,4 @@ cd ~/Documents
 git clone https://github.com/prjemian/rpi_dht22
 cd rpi_dht22/rpi_dht22_epics/
 ./sensor.py -h
-./sensor.py --list-pvs --prefix `hostname`:
+./sensor.py --list-pvs --prefix ${HOSTNAME}:
