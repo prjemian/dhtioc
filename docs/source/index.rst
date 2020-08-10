@@ -13,6 +13,7 @@ Provide humidity and temperature using EPICS and Raspberry Pi
    :caption: Contents:
 
    install
+   changes
 
 
 
