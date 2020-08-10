@@ -35,3 +35,7 @@ Change History
 :0.0.1:
 
     * `<https://github.com/prjemian/rpi_dht_epics/releases/tag/0.0.1>`_ proof of example
+
+----------
+
+This project uses [sematic versioning](https://semver.org).
