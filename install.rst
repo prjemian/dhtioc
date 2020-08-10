@@ -1,6 +1,9 @@
 Installation
 ============
 
+Prepare a Raspberry Pi (RPi) to read a DHT22 (digital humidity and termperature sensor)
+and post values as an EPICS IOC server.
+
 1. Initial configuration of the RPi
 1. Installation of required libraries
 1. Installation of the project code
