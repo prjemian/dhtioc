@@ -20,6 +20,7 @@ SMOOTHING_FACTOR = 0.6      # factor between 0 and 1, higher is smoother
 
 
 def C2F(celsius):
+    "convert celsius to fahrenheit"
     return celsius * 9 / 5 + 32
 
 
@@ -74,6 +75,11 @@ class Trend:
         self.trend = None
 
     def compute(self, reading):
+        """
+        (re)compute the trend
+
+        Actually, reset the stats registers and load new values
+        """
         self.stats.Clear()
         for factor in self.cache.keys():
             self.cache[factor] = smooth(reading, factor, self.cache[factor])
@@ -81,6 +87,7 @@ class Trend:
 
     @property
     def slope(self):
+        "set the trend as the slope of smoothed v. (1-smoothing factor)"
         raw = self.stats.LinearRegression()[-1]
         self.trend = smooth(raw, 0.999, self.trend)
         return self.trend
@@ -103,11 +110,13 @@ class DHT_Sensor:
         self.read_in_background_thread()
 
     def read(self):
+        "get new raw values from the sensor"
         self.humidity, self.temperature = Adafruit_DHT.read_retry(self.sensor, self.pin)
         self.ready = True
 
     @run_in_thread
     def read_in_background_thread(self):
+        "monitor the sensor for new values"
         while self.run_permitted:
             try:
                 self.read()
@@ -209,6 +218,7 @@ class DHT_IOC(PVGroup):
 
     @humidity.startup
     async def humidity(self, instance, async_lib):
+        "set the humidity PV"
         t_next_read = time.time()
         while True:
             t_next_read += self.period
@@ -224,6 +234,7 @@ class DHT_IOC(PVGroup):
 
     @humidity_raw.startup
     async def humidity_raw(self, instance, async_lib):
+        "set the humidity:raw PV"
         t_next_read = time.time()
         while True:
             t_next_read += self.period
@@ -235,6 +246,7 @@ class DHT_IOC(PVGroup):
 
     @humidity_trend.startup
     async def humidity_trend(self, instance, async_lib):
+        "set the humidity:trend PV"
         while True:
             if self._set_humidity_trend:
                 await instance.write(value=self._humidity_trend.slope)
@@ -243,6 +255,7 @@ class DHT_IOC(PVGroup):
 
     @temperature.startup
     async def temperature(self, instance, async_lib):
+        "set the temperature PV"
         t_next_read = time.time()
         while True:
             t_next_read += self.period
@@ -259,6 +272,7 @@ class DHT_IOC(PVGroup):
 
     @temperature_raw.startup
     async def temperature_raw(self, instance, async_lib):
+        "set the temperature:raw PV"
         t_next_read = time.time()
         while True:
             t_next_read += self.period
@@ -270,6 +284,7 @@ class DHT_IOC(PVGroup):
 
     @temperature_f.startup
     async def temperature_f(self, instance, async_lib):
+        "set the temperature:F PV"
         while True:
             if self._set_temperature_f:
                 if self._temperature is not None:
@@ -279,6 +294,7 @@ class DHT_IOC(PVGroup):
 
     @temperature_f_raw.startup
     async def temperature_f_raw(self, instance, async_lib):
+        "set the temperature:F:raw PV"
         t_next_read = time.time()
         while True:
             t_next_read += self.period
@@ -290,6 +306,7 @@ class DHT_IOC(PVGroup):
 
     @temperature_trend.startup
     async def temperature_trend(self, instance, async_lib):
+        "set the temperature:trend PV"
         while True:
             if self._set_temperature_trend:
                 await instance.write(value=self._temperature_trend.slope)
