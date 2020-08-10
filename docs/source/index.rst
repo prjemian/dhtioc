@@ -11,8 +11,10 @@ Provide humidity and temperature using EPICS and Raspberry Pi
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
+   :glob:
 
    install
+   code/*
    changes
 
 

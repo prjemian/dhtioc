@@ -4,6 +4,10 @@
 Change History
 ##############
 
+:0.2.1:
+
+    * rename repo to *dhtioc*
+
 :0.2.0:
 
     * `<https://github.com/prjemian/rpi_dht_epics/releases/tag/0.2.0>`_ use older DHT API

@@ -1,8 +1,8 @@
 Installation
 ============
 
-Prepare a Raspberry Pi (RPi) to read a DHT22 (digital humidity and termperature sensor)
-and post values as an EPICS IOC server.
+Prepare a Raspberry Pi (RPi) to read a DHT22 (digital humidity and
+temperature sensor) and post values as an EPICS IOC server.
 
 1. Initial configuration of the RPi
 1. Installation of required libraries
@@ -142,7 +142,7 @@ Any i2c-connected devices will report their address here::
     # do NOT install this package!
     # NO # pip3 install adafruit-circuitpython-dht
     # sudo apt-get install -y libgpiod2
-    # see: https://github.com/prjemian/rpi_dht22/issues/12
+    # see: https://github.com/prjemian/dhtioc/issues/12
     # instead:
     pip3 install Adafruit_DHT
 
@@ -156,8 +156,8 @@ Installation of the project code
 
     mkdir ~/Documents
     cd ~/Documents
-    git clone https://github.com/prjemian/rpi_dht22
-    cd rpi_dht22/rpi_dht22_epics/
+    git clone https://github.com/prjemian/dhtioc
+    cd dhtioc/dhtioc/
 
 Run the project
 ***************

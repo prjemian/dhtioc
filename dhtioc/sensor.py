@@ -7,7 +7,7 @@
 import Adafruit_DHT
 import atexit
 from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run as run_ioc
-import StatsReg
+from . import StatsReg
 from textwrap import dedent
 import threading
 import time
@@ -27,6 +27,7 @@ def run_in_thread(func):
     """
     (decorator) run ``func`` in thread
     USAGE::
+
        @run_in_thread
        def progress_reporting():
            logger.debug("progress_reporting is starting")
@@ -34,6 +35,7 @@ def run_in_thread(func):
        #...
        progress_reporting()   # runs in separate thread
        #...
+
     """
     def wrapper(*args, **kwargs):
         thread = threading.Thread(target=func, args=args, kwargs=kwargs)
@@ -86,7 +88,7 @@ class Trend:
 
 class DHT_Sensor:
     """
-    Read from the Digital Humidity & Termperature sensor and cache the raw values
+    Read from the Digital Humidity & Temperature sensor and cache the raw values
     """
 
     def __init__(self, sensor=None, data_pin=None, update_period=None):

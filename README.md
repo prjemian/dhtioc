@@ -1,2 +1,8 @@
-# rpi_dht22
-Raspberry Pi with DHT-22 sensor using Python and EPICS
+# dhtioc
+Provide humidity and temperature using EPICS and Raspberry Pi
+
+Uses
+
+* DHT22 sensor
+* Raspberry Pi
+* EPICS caproto IOC
