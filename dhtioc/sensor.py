@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
 
+"""
+Provide humidity and temperature using EPICS and Raspberry Pi
+
+.. autosummary::
+    ~C2F
+    ~DHT_IOC
+    ~DHT_Sensor
+    ~main
+    ~run_in_thread
+    ~smooth
+    ~Trend
+
+"""
 # sensor.py
 # https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
 # https://pinout.xyz/
@@ -67,12 +80,17 @@ class Trend:
 
     Apply smoothing with various factors, and take the slope
     of the smoothed signal v. the smoothing factor.
+
+    .. autosummary::
+        ~compute
+        ~slope
     """
 
     def __init__(self):
         self.cache = {k: None for k in [0.8, 0.9, 0.95, 0.98, 0.99]}
         self.stats = StatsReg.StatsRegClass()
         self.trend = None
+        self._computed = False
 
     def compute(self, reading):
         """
@@ -81,6 +99,7 @@ class Trend:
         Actually, reset the stats registers and load new values
         """
         self.stats.Clear()
+        self._computed = False
         for factor in self.cache.keys():
             self.cache[factor] = smooth(reading, factor, self.cache[factor])
             self.stats.Add(1-factor, self.cache[factor])
@@ -88,14 +107,27 @@ class Trend:
     @property
     def slope(self):
         "set the trend as the slope of smoothed v. (1-smoothing factor)"
-        raw = self.stats.LinearRegression()[-1]
-        self.trend = smooth(raw, 0.999, self.trend)
+        if not self._computed and self.stats.count > 1:
+            raw = self.stats.LinearRegression()[-1]
+            self.trend = smooth(raw, 0.999, self.trend)
+            self._computed = True
         return self.trend
+    
+    def __str__(self):
+        if self.slope is None:
+            return "no trend yet"
+        else:
+            return "trend: {self.slope:.3f}"
+
 
 
 class DHT_Sensor:
     """
     Read from the Digital Humidity & Temperature sensor and cache the raw values
+
+    .. autosummary::
+        ~read
+        ~read_in_background_thread
     """
 
     def __init__(self, sensor=None, data_pin=None, update_period=None):
@@ -108,6 +140,12 @@ class DHT_Sensor:
         self.run_permitted = True
 
         self.read_in_background_thread()
+    
+    def __str__(self):
+        if self.ready:
+            return f"RH={self.humidity:.2f}% T={self.temperature:.2f}C"
+        else:
+            return "no signal yet"
 
     def read(self):
         "get new raw values from the sensor"
@@ -128,6 +166,17 @@ class DHT_Sensor:
 class DHT_IOC(PVGroup):
     """
     EPICS server (IOC) with humidity & temperature (read-only) PVs
+
+    .. autosummary::
+        ~shutdown_dht_device
+        ~humidity
+        ~humidity_raw
+        ~humidity_trend
+        ~temperature
+        ~temperature_raw
+        ~temperature_f
+        ~temperature_f_raw
+        ~temperature_trend
     """
 
     humidity = pvproperty(
@@ -315,6 +364,7 @@ class DHT_IOC(PVGroup):
 
 
 def main():
+    "entry point for command-line program"
     ioc_options, run_options = ioc_arg_parser(
         default_prefix='dht:',
         desc=dedent(DHT_IOC.__doc__))
