@@ -25,11 +25,13 @@ from textwrap import dedent
 import threading
 import time
 
-INNER_LOOP_SLEEP = 0.01     # s
-UPDATE_PERIOD = 2.0         # s, read the DHT22 at this interval (no faster)
-RPI_DHT_MODEL = 22          # type of DHT (11, 22, ...)
-RPI_DHT_PIN = 4             # DHT22 signal connected to this RPi pin
-SMOOTHING_FACTOR = 0.6      # factor between 0 and 1, higher is smoother
+INNER_LOOP_SLEEP = 0.01         # s
+UPDATE_PERIOD = 2.0             # s, read the DHT22 at this interval (no faster)
+RPI_DHT_MODEL = 22              # type of DHT (11, 22, ...)
+RPI_DHT_PIN = 4                 # DHT22 signal connected to this RPi pin
+SMOOTHING_FACTOR = 0.72         # factor between 0 and 1, higher is smoother
+TREND_SMOOTHING_FACTOR = 0.95   # applied to the reported trend
+# pick smoothing factors: https://github.com/prjemian/dhtioc/issues/20#issuecomment-672074382
 
 
 def C2F(celsius):
@@ -109,7 +111,7 @@ class Trend:
         "set the trend as the slope of smoothed v. (1-smoothing factor)"
         if not self._computed and self.stats.count > 1:
             raw = self.stats.LinearRegression()[-1]
-            self.trend = smooth(raw, 0.999, self.trend)
+            self.trend = smooth(raw, TREND_SMOOTHING_FACTOR, self.trend)
             self._computed = True
         return self.trend
     
@@ -246,7 +248,6 @@ class DHT_IOC(PVGroup):
         self.device = DHT_Sensor(sensor, data_pin, update_period)
         self.period = update_period
         self.smoothing = SMOOTHING_FACTOR
-        self.trend_smoothing = 0.995    # reduces noise
 
         # internal buffers for trending & signal smoothing
         self._humidity = None
