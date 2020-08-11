@@ -130,3 +130,6 @@ dmypy.json
 
 # Microsoft VisualStudio Code editor
 .vscode/
+
+# typical log file from this project
+log.txt
