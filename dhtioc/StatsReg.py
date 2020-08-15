@@ -37,11 +37,10 @@ version = '0.1a'
 
 
 class StatsRegClass:
-    
     """pocket calculator Statistical Registers class"""
 
     def __init__(self):
-        'set up the statistics registers'
+        """Set up the statistics registers."""
         self.Clear()
 
     def _ClearResults_(self):
@@ -285,7 +284,8 @@ class StatsRegClass:
     # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 def __selftest():
-    """internal test StatsReg functions
+    """
+    internal test StatsReg functions
 
     NOTES:
 

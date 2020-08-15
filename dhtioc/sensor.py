@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
-"""Provide humidity and temperature using EPICS and Raspberry Pi
+"""
+Provide humidity and temperature using EPICS and Raspberry Pi
 
 .. autosummary::
     ~C2F
@@ -89,6 +90,7 @@ class Trend:
     """
 
     def __init__(self):
+        """constructor"""
         self.cache = {k: None for k in [0.8, 0.9, 0.95, 0.98, 0.99]}
         self.stats = StatsReg.StatsRegClass()
         self.trend = None
@@ -108,13 +110,13 @@ class Trend:
 
     @property
     def slope(self):
-        "set the trend as the slope of smoothed v. (1-smoothing factor)"
+        """set the trend as the slope of smoothed v. (1-smoothing factor)"""
         if not self._computed and self.stats.count > 1:
             raw = self.stats.LinearRegression()[-1]
             self.trend = smooth(raw, TREND_SMOOTHING_FACTOR, self.trend)
             self._computed = True
         return self.trend
-    
+
     def __str__(self):
         if self.slope is None:
             return "no trend yet"
@@ -157,7 +159,7 @@ class DHT_Sensor:
         self.run_permitted = True
 
         self.read_in_background_thread()
-    
+
     def __str__(self):
         if self.ready:
             return f"RH={self.humidity:.2f}% T={self.temperature:.2f}C"
@@ -175,7 +177,7 @@ class DHT_Sensor:
 
     @run_in_thread
     def read_in_background_thread(self):
-        "monitor the sensor for new values"
+        """monitor the sensor for new values"""
         while self.run_permitted:
             try:
                 self.read()
@@ -281,13 +283,13 @@ class DHT_IOC(PVGroup):
         atexit.register(self.shutdown_dht_device)
 
     def shutdown_dht_device(self):
-        """shutdown the DHT sensor"""
-        print(f"stopping DHT sensor")
+        """Shutdown the DHT sensor."""
+        print("stopping DHT sensor")
         self.device.run_permitted = False
 
     @humidity.startup
     async def humidity(self, instance, async_lib):
-        """set the humidity PV"""
+        """Set the humidity PV."""
         t_next_read = time.time()
         while True:
             t_next_read += self.period
@@ -303,7 +305,7 @@ class DHT_IOC(PVGroup):
 
     @humidity_raw.startup
     async def humidity_raw(self, instance, async_lib):
-        """set the humidity:raw PV"""
+        """Set the humidity:raw PV."""
         t_next_read = time.time()
         while True:
             t_next_read += self.period
@@ -315,7 +317,7 @@ class DHT_IOC(PVGroup):
 
     @humidity_trend.startup
     async def humidity_trend(self, instance, async_lib):
-        """set the humidity:trend PV"""
+        """Set the humidity:trend PV."""
         while True:
             if self._set_humidity_trend:
                 await instance.write(value=self._humidity_trend.slope)
@@ -324,7 +326,7 @@ class DHT_IOC(PVGroup):
 
     @temperature.startup
     async def temperature(self, instance, async_lib):
-        """set the temperature PV"""
+        """Set the temperature PV."""
         t_next_read = time.time()
         while True:
             t_next_read += self.period
@@ -341,7 +343,7 @@ class DHT_IOC(PVGroup):
 
     @temperature_raw.startup
     async def temperature_raw(self, instance, async_lib):
-        """set the temperature:raw PV"""
+        """Set the temperature:raw PV."""
         t_next_read = time.time()
         while True:
             t_next_read += self.period
@@ -353,7 +355,7 @@ class DHT_IOC(PVGroup):
 
     @temperature_f.startup
     async def temperature_f(self, instance, async_lib):
-        """set the temperature:F PV"""
+        """Set the temperature:F PV."""
         while True:
             if self._set_temperature_f:
                 if self._temperature is not None:
@@ -363,7 +365,7 @@ class DHT_IOC(PVGroup):
 
     @temperature_f_raw.startup
     async def temperature_f_raw(self, instance, async_lib):
-        """set the temperature:F:raw PV"""
+        """Set the temperature:F:raw PV."""
         t_next_read = time.time()
         while True:
             t_next_read += self.period
@@ -375,7 +377,7 @@ class DHT_IOC(PVGroup):
 
     @temperature_trend.startup
     async def temperature_trend(self, instance, async_lib):
-        """set the temperature:trend PV"""
+        """Set the temperature:trend PV."""
         while True:
             if self._set_temperature_trend:
                 await instance.write(value=self._temperature_trend.slope)
@@ -384,7 +386,7 @@ class DHT_IOC(PVGroup):
 
 
 def main():
-    """entry point for command-line program"""
+    """Entry point for command-line program."""
     ioc_options, run_options = ioc_arg_parser(
         default_prefix='dht:',
         desc=dedent(DHT_IOC.__doc__))
