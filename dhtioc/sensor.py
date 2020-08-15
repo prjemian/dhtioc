@@ -171,6 +171,7 @@ class DHT_Sensor:
             self.temperature = self.sensor.temperature
             self.humidity = self.sensor.humidity
             self.ready = True
+            print(f"{time.time():.2f} {self.humidity:.1f}%  {self.temperature*9/5+32:.1f}F")
         except RuntimeError as exc:    # this could happen a lot!
             print(f"{time.time():.2f} {exc}")
 
