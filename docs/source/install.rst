@@ -73,7 +73,7 @@ raspi-config
 Run ``sudo raspi-config`` and configure these settings:
 
 * 1 change password for user ``pi``
-* 2 Network Options: I2 Change: N1 Hostname -- pick a unique name, see suggestion above
+* 2 Network Options: N1 Hostname -- pick a unique name, see suggestion above
 * 4 Localisation Options: I2 Change Timezone -- (if not set in ``wpa_supplicant.conf`` file)
 * 5 Interfacing Options: P4 SPI -- **Yes**
 * 5 Interfacing Options: P5 I2C -- **Yes**
