@@ -170,8 +170,8 @@ class DHT_Sensor:
             self.temperature = self.sensor.temperature
             self.humidity = self.sensor.humidity
             self.ready = True
-        except RuntimeError as exc:
-            print(f"{time.time():.2f} {exc}")
+        except RuntimeError:    # this could happen a lot!
+            pass
 
     @run_in_thread
     def read_in_background_thread(self):
