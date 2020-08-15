@@ -17,8 +17,9 @@ Provide humidity and temperature using EPICS and Raspberry Pi
 # https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
 # https://pinout.xyz/
 
-import Adafruit_DHT
+import adafruit_dht
 import atexit
+import board
 from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run as run_ioc
 from . import StatsReg
 from textwrap import dedent
@@ -28,7 +29,7 @@ import time
 INNER_LOOP_SLEEP = 0.01         # s
 UPDATE_PERIOD = 2.0             # s, read the DHT22 at this interval (no faster)
 RPI_DHT_MODEL = 22              # type of DHT (11, 22, ...)
-RPI_DHT_PIN = 4                 # DHT22 signal connected to this RPi pin
+RPI_DHT_PIN = board.D4          # DHT signal connected to this RPi pin
 SMOOTHING_FACTOR = 0.72         # factor between 0 and 1, higher is smoother
 TREND_SMOOTHING_FACTOR = 0.95   # applied to the reported trend
 # pick smoothing factors: https://github.com/prjemian/dhtioc/issues/20#issuecomment-672074382
@@ -133,7 +134,9 @@ class DHT_Sensor:
     """
 
     def __init__(self, sensor=None, data_pin=None, update_period=None):
-        self.sensor = sensor or Adafruit_DHT.DHT22
+        if sensor not in (22,):
+            raise ValueError(f"unexpected sensor value: {sensor}")
+        self.sensor = adafruit_dht.DHT22(data_pin)
         self.pin = data_pin or 4
         self.update_period = update_period or UPDATE_PERIOD
         self.humidity = None
@@ -151,8 +154,12 @@ class DHT_Sensor:
 
     def read(self):
         "get new raw values from the sensor"
-        self.humidity, self.temperature = Adafruit_DHT.read_retry(self.sensor, self.pin)
-        self.ready = True
+        try:
+            self.humidity = self.sensor.humidity
+            self.temperature = self.sensor.temperature
+            self.ready = True
+        except RuntimeError:
+            pass
 
     @run_in_thread
     def read_in_background_thread(self):

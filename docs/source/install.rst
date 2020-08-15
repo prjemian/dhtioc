@@ -13,6 +13,8 @@ Initial Configuration
 *********************
 
 There are several steps to configure a new RaspberryPi for use.
+We'll follow (more or less) this guide from Adafruit:
+https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
 
 1. Connect a DHT22 sensor to the RPi
 1. Prepare the Operating System media
@@ -138,13 +140,8 @@ Any i2c-connected devices will report their address here::
     # install python modules to support our Python code
     # need module adafruit_dht
     # https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
-    pip3 install RPI.GPIO adafruit-blinka
-    # do NOT install this package!
-    # NO # pip3 install adafruit-circuitpython-dht
-    # sudo apt-get install -y libgpiod2
-    # see: https://github.com/prjemian/dhtioc/issues/12
-    # instead:
-    pip3 install Adafruit_DHT
+    pip3 install RPI.GPIO adafruit-blinka adafruit-circuitpython-dht
+    sudo apt-get install -y libgpiod2
 
     # need module caproto
     pip3 install caproto  --no-warn-script-location
