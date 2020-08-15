@@ -167,8 +167,8 @@ class DHT_Sensor:
     def read(self):
         """get new raw values from the sensor"""
         try:
-            self.humidity = self.sensor.humidity
             self.temperature = self.sensor.temperature
+            self.humidity = self.sensor.humidity
             self.ready = True
         except RuntimeError:
             pass
