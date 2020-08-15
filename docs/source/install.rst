@@ -154,12 +154,12 @@ Installation of the project code
     mkdir ~/Documents
     cd ~/Documents
     git clone https://github.com/prjemian/dhtioc
-    cd dhtioc/dhtioc/
+    cd dhtioc/
 
 Run the project
 ***************
 
 ::
 
-    ./sensor.py -h
-    ./sensor.py --list-pvs --prefix ${HOSTNAME}:
+    ./runner.py -h
+    ./runner.py --list-pvs --prefix ${HOSTNAME}:
