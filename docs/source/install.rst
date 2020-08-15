@@ -13,6 +13,8 @@ Initial Configuration
 *********************
 
 There are several steps to configure a new RaspberryPi for use.
+We'll follow (more or less) this guide from Adafruit:
+https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
 
 1. Connect a DHT22 sensor to the RPi
 1. Prepare the Operating System media
@@ -71,7 +73,7 @@ raspi-config
 Run ``sudo raspi-config`` and configure these settings:
 
 * 1 change password for user ``pi``
-* 2 Network Options: I2 Change: N1 Hostname -- pick a unique name, see suggestion above
+* 2 Network Options: N1 Hostname -- pick a unique name, see suggestion above
 * 4 Localisation Options: I2 Change Timezone -- (if not set in ``wpa_supplicant.conf`` file)
 * 5 Interfacing Options: P4 SPI -- **Yes**
 * 5 Interfacing Options: P5 I2C -- **Yes**
@@ -138,13 +140,8 @@ Any i2c-connected devices will report their address here::
     # install python modules to support our Python code
     # need module adafruit_dht
     # https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
-    pip3 install RPI.GPIO adafruit-blinka
-    # do NOT install this package!
-    # NO # pip3 install adafruit-circuitpython-dht
-    # sudo apt-get install -y libgpiod2
-    # see: https://github.com/prjemian/dhtioc/issues/12
-    # instead:
-    pip3 install Adafruit_DHT
+    pip3 install RPI.GPIO adafruit-blinka adafruit-circuitpython-dht
+    sudo apt-get install -y libgpiod2
 
     # need module caproto
     pip3 install caproto  --no-warn-script-location
@@ -157,12 +154,12 @@ Installation of the project code
     mkdir ~/Documents
     cd ~/Documents
     git clone https://github.com/prjemian/dhtioc
-    cd dhtioc/dhtioc/
+    cd dhtioc/
 
 Run the project
 ***************
 
 ::
 
-    ./sensor.py -h
-    ./sensor.py --list-pvs --prefix ${HOSTNAME}:
+    ./runner.py -h
+    ./runner.py --list-pvs --prefix ${HOSTNAME}:

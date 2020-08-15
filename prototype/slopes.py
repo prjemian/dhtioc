@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 import datetime
-import numpy as np
 from ophyd import Component, Device, EpicsSignalRO, Signal
 import StatsReg
 import time
