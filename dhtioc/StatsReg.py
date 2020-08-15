@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-'''
-Implement a set of statistics registers in the style of a pocket calculator.
+'''Implement a set of statistics registers in the style of a pocket calculator.
 
 The available routines are::
 
@@ -38,7 +37,8 @@ version = '0.1a'
 
 
 class StatsRegClass:
-    'pocket calculator Statistical Registers class'
+    
+    """pocket calculator Statistical Registers class"""
 
     def __init__(self):
         'set up the statistics registers'
@@ -210,7 +210,7 @@ class StatsRegClass:
         return self.intercept + x * self.slope
 
     def determinant(self):
-        ''' compute and return the determinant of the square matrices::
+        '''compute and return the determinant of the square matrices::
 
           |  sum_w   sum_x      |          |  sum_w   sum_y      |
           |  sum_x   sum_(x^2)  |          |  sum_y   sum_(y^2)  |

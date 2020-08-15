@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-"""
-Raspberry Pi support to read DHT-22 sensor and update EPICS PVs
-"""
+"""RPi support to read DHT-22 sensor and update EPICS PVs"""
 
 import adafruit_dht
 import board
@@ -81,6 +79,7 @@ class DHT22:
     # https://pinout.xyz/
 
     def __init__(self, pin):
+        """constructor"""
         self.device = adafruit_dht.DHT22(pin)
         # array of smoothing factors
         self.k_arr = [0.5, 0.7, 0.8, 0.9, 0.95, 0.98, 0.99]

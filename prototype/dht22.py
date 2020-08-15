@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
-"""
-Raspberry Pi support to read DHT-22 sensor and update EPICS PVs
-"""
+"""RPi support to read DHT-22 sensor and update EPICS PVs"""
 
 import adafruit_dht
 import board

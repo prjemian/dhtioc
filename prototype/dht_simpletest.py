@@ -26,9 +26,9 @@ while True:
             )
         )
 
-    except RuntimeError as error:
+    except RuntimeError:
         # Errors happen fairly often, DHT's are hard to read, just keep going
-        pass  # print(error.args[0])
+        pass
 
     time.sleep(2.0)
 
