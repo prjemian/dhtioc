@@ -36,7 +36,7 @@ TREND_SMOOTHING_FACTOR = 0.95   # applied to the reported trend
 
 
 def C2F(celsius):
-    """convert celsius to fahrenheit"""
+    """Convert celsius to fahrenheit."""
     return celsius * 9 / 5 + 32
 
 
@@ -134,11 +134,11 @@ class DHT_Sensor:
         ~read_in_background_thread
     """
 
-    def __init__(self, sensor=None, data_pin=None, update_period=None):
+    def __init__(self, model, data_pin, update_period=None):
         """
         PARAMETERS
 
-        sensor :
+        model :
             int
             Always use 22 for now, for a DHT22 sensor.
         data_pin :
@@ -148,10 +148,9 @@ class DHT_Sensor:
             float
             Update humidity and temperature at this interval, seconds.
         """
-        if sensor not in (22,):
-            raise ValueError(f"unexpected sensor value: {sensor}")
-        self.pin = data_pin or board.D4
-        self.sensor = adafruit_dht.DHT22(self.pin)
+        if model not in (22,):
+            raise ValueError(f"unexpected sensor model: {model}")
+        self.sensor = adafruit_dht.DHT22(data_pin)
         self.update_period = update_period or UPDATE_PERIOD
         self.humidity = None
         self.temperature = None
@@ -264,9 +263,10 @@ class DHT_IOC(PVGroup):
         doc="trend in temperature",
         record='ai')
 
-    def __init__(self, *args, sensor, data_pin, update_period, **kwargs):
+    def __init__(self, *args, sensor, update_period, **kwargs):
+        """constructor"""
         super().__init__(*args, **kwargs)
-        self.device = DHT_Sensor(sensor, data_pin, update_period)
+        self.device = sensor
         self.period = update_period
         self.smoothing = SMOOTHING_FACTOR
 
@@ -390,11 +390,9 @@ def main():
     ioc_options, run_options = ioc_arg_parser(
         default_prefix='dht:',
         desc=dedent(DHT_IOC.__doc__))
-    ioc = DHT_IOC(
-        sensor=RPI_DHT_MODEL,
-        data_pin=RPI_DHT_PIN,
-        update_period=UPDATE_PERIOD,
-        **ioc_options)
+    
+    sensor = DHT_Sensor(RPI_DHT_MODEL, RPI_DHT_PIN, UPDATE_PERIOD)
+    ioc = DHT_IOC(sensor, UPDATE_PERIOD, **ioc_options)
 
     def killer(ioc):
         print("deleting IOC object")
