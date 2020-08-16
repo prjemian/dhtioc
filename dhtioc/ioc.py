@@ -252,6 +252,8 @@ class MyIoc(PVGroup):
         self.period = report_period
         self.smoothing = SMOOTHING_FACTOR
 
+        self._humidity = None
+
         atexit.register(self.device.terminate_background_thread)
 
 
@@ -264,12 +266,14 @@ class MyIoc(PVGroup):
             t_next_read += self.period
             if self.device.ready:
                 raw = self.device.humidity
-                self._humidity = raw
-                # self._humidity = smooth(raw, self.smoothing, self._humidity)
-                await instance.write(value=self._humidity)
+                self._humidity = smooth(raw, self.smoothing, self._humidity)
                 # self._humidity_trend.compute(raw)
-                # self._set_humidity_trend = True
-                await self.temperature.write(value=self.device.temperature)
+
+                raw = self.device.temperature
+                self._temperature = smooth(raw, self.smoothing, self._temperature)
+
+                await instance.write(value=self._humidity)
+                await self.temperature.write(value=self._temperature)
 
             while time.time() < t_next_read:
                 await async_lib.library.sleep(INNER_LOOP_SLEEP)
