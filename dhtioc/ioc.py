@@ -40,6 +40,13 @@ class MyIoc(PVGroup):
         ~temperature_trend
     """
 
+    counter = pvproperty(
+        value=0,
+        dtype=int,
+        read_only=True,
+        name='counter',
+        doc="counter",
+        record='longin')
     humidity = pvproperty(
         value=0,
         dtype=float,
@@ -150,6 +157,8 @@ class MyIoc(PVGroup):
                 await self.temperature.write(value=self._temperature)
                 await self.temperature_f.write(value=C2F(self._temperature))
                 await self.temperature_trend.write(value=self._temperature_trend.slope)
+
+                self.counter.write(1 + self.counter.read())
 
             while time.time() < t_next_read:
                 await async_lib.library.sleep(INNER_LOOP_SLEEP)
