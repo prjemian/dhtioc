@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
-"""
-Provide humidity and temperature using EPICS and Raspberry Pi
+"""Provide humidity and temperature using EPICS and Raspberry Pi
 
 .. autosummary::
     ~DHT_IOC

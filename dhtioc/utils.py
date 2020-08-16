@@ -1,5 +1,4 @@
-"""
-Utility functions.
+"""Utility functions.
 
 .. autosummary::
     ~C2F
