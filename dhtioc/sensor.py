@@ -391,7 +391,7 @@ def main():
     ioc_options, run_options = ioc_arg_parser(
         default_prefix='dht:',
         desc=dedent(DHT_IOC.__doc__))
-    
+
     sensor = DHT_Sensor(RPI_DHT_MODEL, RPI_DHT_PIN, UPDATE_PERIOD)
     ioc = DHT_IOC(sensor=sensor, update_period=UPDATE_PERIOD, **ioc_options)
 
