@@ -244,9 +244,9 @@ class MyIoc(PVGroup):
         units="C",
         record='ai')
 
-    def __init__(self, *args, sensor, update_period, **kwargs):
+    def __init__(self, *args, sensor, report_period, **kwargs):
         self.device = sensor
-        self.period = update_period
+        self.period = report_period
         self.smoothing = SMOOTHING_FACTOR
 
         atexit.register(self.device.terminate_background_thread)
