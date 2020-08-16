@@ -1,10 +1,7 @@
 #!/usr/bin/env python3
 
 import board
-from dhtioc import DHT_sensor
-
-READ_PERIOD = 2.0
-PIN = board.D4
+from dhtioc import DHT_sensor, PIN, READ_PERIOD
 
 
 def main():

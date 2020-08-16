@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+__all__ = "DHT_sensor PIN READ_PERIOD".split()
+
 """Read the sensor and cache the values."""
 
 import adafruit_dht
@@ -53,9 +55,9 @@ class DHT_sensor:
         try:
             self.temperature = self.sensor.temperature
             self.humidity = self.sensor.humidity
-            print(f"{time.time()-self.t0:.2f} {self}")
+            logger.info(f"{time.time()-self.t0:.2f} {self}")
         except RuntimeError as exc:     # be prepared, it happens too much
-            print(f"{time.time()-self.t0:.2f} {exc}")
+            logger.debug(f"{time.time()-self.t0:.2f} {exc}")
 
     @run_in_thread
     def read_in_background_thread(self):
@@ -72,7 +74,10 @@ class DHT_sensor:
 
 
 def main():
-    DHT_sensor(PIN, READ_PERIOD)
+    sensor = DHT_sensor(PIN, READ_PERIOD)
+    while True:
+        print(sensor)
+        time.sleep(2)
 
 
 if __name__ == "__main__":

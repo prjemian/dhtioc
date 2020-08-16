@@ -1,6 +1,21 @@
-"""Utility functions."""
+"""
+Utility functions.
+
+.. autosummary::
+    ~C2F
+    ~run_in_thread
+    ~smooth
+
+"""
+
+__all__ = "C2F run_in_thread smooth".split()
 
 import threading
+
+
+def C2F(celsius):
+    """Convert celsius to fahrenheit."""
+    return celsius * 9 / 5 + 32
 
 
 def run_in_thread(func):
@@ -22,3 +37,19 @@ def run_in_thread(func):
         thread.start()
         return thread
     return wrapper
+
+
+def smooth(reading, factor, previous):
+    """
+    apply smoothing function
+
+    ::
+
+        smoothed = k*raw + (1-k)*previous
+
+    """
+    if previous is None:
+        value = reading
+    else:
+        value = factor*previous + (1-factor)*reading
+    return value
