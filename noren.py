@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
 
-from dhtioc import reader
+from dhtioc import ioc
 
-reader.main()
+ioc.main()

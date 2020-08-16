@@ -224,16 +224,55 @@ class DHT_IOC(PVGroup):
             await async_lib.library.sleep(INNER_LOOP_SLEEP)
 
 
+class MyIoc(PVGroup):
+
+    humidity = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='humidity',
+        doc="relative humidity",
+        units="%",
+        record='ai')
+
+    temperature = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='temperature',
+        doc="temperature",
+        units="C",
+        record='ai')
+
+    def __init__(self, *args, sensor, update_period, **kwargs):
+        self.device = sensor
+        self.period = update_period
+        self.smoothing = SMOOTHING_FACTOR
+
+        atexit.register(self.device.terminate_background_thread)
+
+    def updater(self):
+        time_to_update_pvs = time.time()
+        while True:
+            if time.time() >= time_to_update_pvs:
+                time_to_update_pvs += self.period
+                print(f"{time.time():.2f} {self.device}")
+                if None not in (self.device.humidity, self.device.temperature):
+                    self.humidity.write(self.humidity.temperature)
+                    self.temperature.write(self.device.temperature)
+            time.sleep(0.02)
+
+
 def main():
     """Entry point for command-line program."""
-    from . import DHT_sensor, PIN, READ_PERIOD
+    from .reader import DHT_sensor, PIN, READ_PERIOD
 
     ioc_options, run_options = ioc_arg_parser(
         default_prefix='dht:',
         desc=dedent(DHT_IOC.__doc__))
 
     sensor = DHT_Sensor(PIN, READ_PERIOD)
-    server = DHT_IOC(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
+    server = MyIoc(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
 
     def killer(server):
         print("deleting IOC object")
