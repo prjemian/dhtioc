@@ -64,7 +64,7 @@ class MyIoc(PVGroup):
         read_only=True,
         name='humidity:trend',
         doc="trend in relative humidity",
-        units="arbitrary",
+        units="a.u.",
         precision=4,
         record='ai')
     temperature = pvproperty(
@@ -109,7 +109,7 @@ class MyIoc(PVGroup):
         read_only=True,
         name='temperature:trend',
         doc="trend in temperature",
-        units="arbitrary",
+        units="a.u.",
         precision=4,
         record='ai')
 
