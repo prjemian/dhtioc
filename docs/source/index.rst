@@ -17,6 +17,7 @@ Provide humidity and temperature using EPICS and Raspberry Pi
    code/*
    changes
 
+* `caproto <https://github.com/caproto/caproto>`_
 
 Indices and tables
 ==================
