@@ -269,7 +269,7 @@ class MyIoc(PVGroup):
                 await instance.write(value=self._humidity)
                 # self._humidity_trend.compute(raw)
                 # self._set_humidity_trend = True
-                # await temperature.write(value=self.device.temperature)
+                await self.temperature.write(value=self.device.temperature)
 
             while time.time() < t_next_read:
                 await async_lib.library.sleep(INNER_LOOP_SLEEP)
