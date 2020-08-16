@@ -110,10 +110,7 @@ to be called when we type ``python``.  Here's how to make that happen:
     sudo pip3 install --upgrade setuptools
     sudo update-alternatives --install /usr/bin/python python $(which python2) 1
     sudo update-alternatives --install /usr/bin/python python $(which python3) 2
-    sudo ln -f -s $(which python3) /etc/alternatives/python
-    sudo ln -f -s /etc/alternatives/python /usr/bin/python
-    # or this interactive method
-    #   sudo update-alternatives --config python
+    sudo update-alternatives --config python
 
 Reboot
 ------
@@ -145,6 +142,9 @@ Any i2c-connected devices will report their address here::
 
     # need module caproto
     pip3 install caproto  --no-warn-script-location
+
+    # to run EPICS IOC in a detached shell
+    sudo apt-get install -y screen
 
 Installation of the project code
 ********************************

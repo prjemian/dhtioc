@@ -24,12 +24,13 @@ INNER_LOOP_SLEEP = 0.01         # s
 REPORT_PERIOD = 2.0             # s, read the DHT22 at this interval (no faster)
 
 
-class MyIoc(PVGroup):
+class DHT_IOC(PVGroup):
     """
     EPICS server (IOC) with humidity & temperature (read-only) PVs.
 
     .. autosummary::
         ~shutdown_dht_device
+        ~counter
         ~humidity
         ~humidity_raw
         ~humidity_trend
@@ -121,6 +122,7 @@ class MyIoc(PVGroup):
         record='ai')
 
     def __init__(self, *args, sensor, report_period, **kwargs):
+        """Constructor."""
         super().__init__(*args, **kwargs)
 
         self.device = sensor
@@ -170,10 +172,10 @@ def main():
 
     ioc_options, run_options = ioc_arg_parser(
         default_prefix='dht:',
-        desc=dedent(MyIoc.__doc__))
+        desc=dedent(DHT_IOC.__doc__))
 
     sensor = DHT_sensor(PIN, READ_PERIOD)
-    server = MyIoc(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
+    server = DHT_IOC(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
 
     atexit.register(sensor.terminate_background_thread, server)
     run_ioc(server.pvdb, **run_options)

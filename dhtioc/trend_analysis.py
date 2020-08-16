@@ -1,4 +1,10 @@
-"""Analyze signal for its recent trend."""
+"""
+Analyze signal for its recent trend.
+
+.. autosummary::
+    ~Trend
+
+"""
 
 __all__ = "SMOOTHING_FACTOR Trend TREND_SMOOTHING_FACTOR".split()
 
@@ -23,7 +29,7 @@ class Trend:
     """
 
     def __init__(self):
-        """constructor"""
+        """Constructor."""
         self.cache = {k: None for k in [0.5, 0.7, 0.8, 0.9, 0.95]}
         self.stats = StatsRegClass()
         self.trend = None
@@ -31,7 +37,7 @@ class Trend:
 
     def compute(self, reading):
         """
-        (re)compute the trend
+        (Re)compute the trend.
 
         Actually, reset the stats registers and load new values
         """
@@ -43,7 +49,7 @@ class Trend:
 
     @property
     def slope(self):
-        """set the trend as the slope of smoothed v. (1-smoothing factor)"""
+        """Set the trend as the slope of smoothed v. (1-smoothing factor)."""
         if not self._computed and self.stats.count > 1:
             raw = self.stats.LinearRegression()[-1]
             self.trend = smooth(raw, TREND_SMOOTHING_FACTOR, self.trend)

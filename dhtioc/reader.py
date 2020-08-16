@@ -2,7 +2,14 @@
 
 __all__ = "DHT_sensor PIN READ_PERIOD".split()
 
-"""Read the sensor and cache the values."""
+"""
+Read the sensor and cache the values.
+
+.. autosummary::
+    ~DHT_sensor
+    ~main
+
+"""
 
 import adafruit_dht
 import atexit
@@ -18,7 +25,16 @@ PIN = board.D4
 
 
 class DHT_sensor:
-    """Get readings from DH22 sensor."""
+    """
+    Get readings from DH22 sensor.
+
+    .. autosummary::
+        ~read
+        ~read_in_background_thread
+        ~ready
+        ~terminate_background_thread
+
+    """
 
     def __init__(self, pin, period):
         """
@@ -52,6 +68,7 @@ class DHT_sensor:
             return "no signal yet"
 
     def read(self):
+        """Read signals from the DHT22 sensor."""
         try:
             self.temperature = self.sensor.temperature
             self.humidity = self.sensor.humidity
@@ -71,14 +88,18 @@ class DHT_sensor:
 
     @property
     def ready(self):
+        """Has a value been read for both humidity and temperature?"""
         return None not in (self.humidity, self.temperature)
 
     def terminate_background_thread(self, *args, **kwargs):
+        """Signal the background thread to stop."""
         logger.debug("terminate background thread")
         self.run_permitted = False
+        time.sleep(LOOP_SLEEP*4)
 
 
 def main():
+    """Development use only."""
     sensor = DHT_sensor(PIN, READ_PERIOD)
     t0 = time.time()
     while True:
