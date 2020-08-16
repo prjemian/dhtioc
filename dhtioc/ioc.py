@@ -233,7 +233,7 @@ class MyIoc(PVGroup):
         read_only=True,
         name='humidity',
         doc="relative humidity",
-        engineering_units="%",
+        units="%",
         record='ai')
 
     temperature = pvproperty(
@@ -242,7 +242,7 @@ class MyIoc(PVGroup):
         read_only=True,
         name='temperature',
         doc="temperature",
-        engineering_units="C",
+        units="C",
         record='ai')
 
     def __init__(self, *args, sensor, report_period, **kwargs):
