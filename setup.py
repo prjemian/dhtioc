@@ -13,6 +13,7 @@ import sys
 here = path.abspath(path.dirname(__file__))
 sys.path.insert(0, path.join('dhtioc', ))
 import dhtioc as package
+import versioneer
 
 
 __entry_points__  = {
@@ -38,6 +39,6 @@ setup(
     url              = package.__url__,
     zip_safe         = package.__zip_safe__,
     python_requires  = package.__python_version_required__,
-    # version          = versioneer.get_version(),
-    # cmdclass         = versioneer.get_cmdclass(),
+    version          = versioneer.get_version(),
+    cmdclass         = versioneer.get_cmdclass(),
  )
