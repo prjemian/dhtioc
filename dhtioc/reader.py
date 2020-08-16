@@ -73,7 +73,8 @@ class DHT_sensor:
     def ready(self):
         return None not in (self.humidity, self.temperature)
 
-    def terminate_background_thread(self):
+    def terminate_background_thread(self, *args, **kwargs):
+        logger.debug("terminate background thread")
         self.run_permitted = False
 
 
