@@ -234,8 +234,24 @@ class MyIoc(PVGroup):
         name='humidity',
         doc="relative humidity",
         units="%",
+        precision=3,
         record='ai')
-
+    humidity_raw = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='humidity:raw',
+        doc="relative humidity: most recent reading",
+        units="%",
+        precision=1,
+        record='ai')
+    humidity_trend = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='humidity:trend',
+        doc="trend in relative humidity",
+        record='ai')
     temperature = pvproperty(
         value=0,
         dtype=float,
@@ -243,6 +259,41 @@ class MyIoc(PVGroup):
         name='temperature',
         doc="temperature",
         units="C",
+        precision=3,
+        record='ai')
+    temperature_f = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='temperature:F',
+        doc="temperature",
+        units="F",
+        precision=3,
+        record='ai')
+    temperature_raw = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='temperature:raw',
+        doc="temperature: most recent reading",
+        units="C",
+        precision=1,
+        record='ai')
+    temperature_f_raw = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='temperature:F:raw',
+        doc="temperature: most recent reading",
+        units="F",
+        precision=1,
+        record='ai')
+    temperature_trend = pvproperty(
+        value=0,
+        dtype=float,
+        read_only=True,
+        name='temperature:trend',
+        doc="trend in temperature",
         record='ai')
 
     def __init__(self, *args, sensor, report_period, **kwargs):
@@ -253,28 +304,35 @@ class MyIoc(PVGroup):
         self.smoothing = SMOOTHING_FACTOR
 
         self._humidity = None
+        self._humidity_trend = Trend()
         self._temperature = None
+        self._temperature_trend = Trend()
 
         atexit.register(self.device.terminate_background_thread)
 
 
-
     @humidity.startup
     async def humidity(self, instance, async_lib):
-        """Set the humidity PV."""
+        """Set the humidity, temperature and other PVs."""
         t_next_read = time.time()
         while True:
             t_next_read += self.period
             if self.device.ready:
                 raw = self.device.humidity
                 self._humidity = smooth(raw, self.smoothing, self._humidity)
-                # self._humidity_trend.compute(raw)
+                self._humidity_trend.compute(raw)
+                await self.humidity_raw.write(value=raw)
+                await self.humidity.write(value=self._humidity)
+                await self.humidity_trend.write(value=self._humidity_trend.slope)
 
                 raw = self.device.temperature
                 self._temperature = smooth(raw, self.smoothing, self._temperature)
-
-                await instance.write(value=self._humidity)
+                self._temperature_trend.compute(raw)
+                await self.temperature_raw.write(value=raw)
+                await self.temperature_f_raw.write(value=C2F(raw))
                 await self.temperature.write(value=self._temperature)
+                await self.temperature_f.write(value=C2F(self._temperature))
+                await self.temperature_trend.write(value=self._temperature_trend.slope)
 
             while time.time() < t_next_read:
                 await async_lib.library.sleep(INNER_LOOP_SLEEP)
