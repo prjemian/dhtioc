@@ -46,10 +46,10 @@ class DHT_sensor:
         self.read_in_background_thread()
 
     def __str__(self):
-        if None in (self.humidity, self.temperature):
-            return "no signal yet"
-        else:
+        if self.ready:
             return f"RH={self.humidity:.1f}% T={self.temperature*9/5+32:.1f}F"
+        else:
+            return "no signal yet"
 
     def read(self):
         try:
@@ -68,6 +68,10 @@ class DHT_sensor:
                 time_to_read += self.period
                 self.read()
             time.sleep(LOOP_SLEEP)
+
+    @property
+    def ready(self):
+        return None not in (self.humidity, self.temperature)
 
     def terminate_background_thread(self):
         self.run_permitted = False
