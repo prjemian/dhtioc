@@ -75,8 +75,9 @@ class DHT_sensor:
 
 def main():
     sensor = DHT_sensor(PIN, READ_PERIOD)
+    t0 = time.time()
     while True:
-        print(sensor)
+        print(f"{time.time()-t0:.2f} {sensor}")
         time.sleep(2)
 
 
