@@ -245,12 +245,12 @@ class MyIoc(PVGroup):
         units="C",
         record='ai')
 
-    def __init__(self, *args, sensor, report_period, **kwargs):
-        self.device = sensor
-        self.period = report_period
-        self.smoothing = SMOOTHING_FACTOR
+    # def __init__(self, *args, sensor, report_period, **kwargs):
+    #     self.device = sensor
+    #     self.period = report_period
+    #     self.smoothing = SMOOTHING_FACTOR
 
-        # atexit.register(self.device.terminate_background_thread)
+    #     atexit.register(self.device.terminate_background_thread)
 
     # def updater(self):
     #     time_to_update_pvs = time.time()
@@ -274,7 +274,7 @@ def main():
 
     # sensor = DHT_sensor(PIN, READ_PERIOD)
     # server = MyIoc(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
-    server = MyIoc(sensor=None, report_period=REPORT_PERIOD, **ioc_options)
+    server = MyIoc(**ioc_options)
 
     # def killer(server):
     #     print("deleting IOC object")
