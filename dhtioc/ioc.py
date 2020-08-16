@@ -253,6 +253,7 @@ class MyIoc(PVGroup):
         self.smoothing = SMOOTHING_FACTOR
 
         self._humidity = None
+        self._temperature = None
 
         atexit.register(self.device.terminate_background_thread)
 
