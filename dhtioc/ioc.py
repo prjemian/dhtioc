@@ -225,6 +225,7 @@ class DHT_IOC(PVGroup):
 
 
 class MyIoc(PVGroup):
+    """DHT22 values."""
 
     humidity = pvproperty(
         value=0,
@@ -232,7 +233,7 @@ class MyIoc(PVGroup):
         read_only=True,
         name='humidity',
         doc="relative humidity",
-        units="%",
+        engineering_units="%",
         record='ai')
 
     temperature = pvproperty(
@@ -241,7 +242,7 @@ class MyIoc(PVGroup):
         read_only=True,
         name='temperature',
         doc="temperature",
-        units="C",
+        engineering_units="C",
         record='ai')
 
     def __init__(self, *args, sensor, report_period, **kwargs):
@@ -249,18 +250,18 @@ class MyIoc(PVGroup):
         self.period = report_period
         self.smoothing = SMOOTHING_FACTOR
 
-        atexit.register(self.device.terminate_background_thread)
+        # atexit.register(self.device.terminate_background_thread)
 
-    def updater(self):
-        time_to_update_pvs = time.time()
-        while True:
-            if time.time() >= time_to_update_pvs:
-                time_to_update_pvs += self.period
-                print(f"{time.time():.2f} {self.device}")
-                if None not in (self.device.humidity, self.device.temperature):
-                    self.humidity.write(self.humidity.temperature)
-                    self.temperature.write(self.device.temperature)
-            time.sleep(0.02)
+    # def updater(self):
+    #     time_to_update_pvs = time.time()
+    #     while True:
+    #         if time.time() >= time_to_update_pvs:
+    #             time_to_update_pvs += self.period
+    #             print(f"{time.time():.2f} {self.device}")
+    #             if None not in (self.device.humidity, self.device.temperature):
+    #                 self.humidity.write(self.humidity.temperature)
+    #                 self.temperature.write(self.device.temperature)
+    #         time.sleep(0.02)
 
 
 def main():
@@ -269,16 +270,17 @@ def main():
 
     ioc_options, run_options = ioc_arg_parser(
         default_prefix='dht:',
-        desc=dedent(DHT_IOC.__doc__))
+        desc=dedent(MyIoc.__doc__))
 
-    sensor = DHT_sensor(PIN, READ_PERIOD)
-    server = MyIoc(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
+    # sensor = DHT_sensor(PIN, READ_PERIOD)
+    # server = MyIoc(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
+    server = MyIoc(sensor=None, report_period=REPORT_PERIOD, **ioc_options)
 
-    def killer(server):
-        print("deleting IOC object")
-        del server
+    # def killer(server):
+    #     print("deleting IOC object")
+    #     del server
 
-    atexit.register(killer, server)
+    # atexit.register(killer, server)
     run_ioc(server.pvdb, **run_options)
 
 
