@@ -4,10 +4,25 @@
 Change History
 ##############
 
+:0.3.3:
+
+    `waveforms
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag.0.3.3>`_
+
+:0.3.2:
+
+    `IOC shell management
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag.0.3.2>`_
+
+:0.3.1:
+
+    `packaging, versioning, and publishing
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag.0.3.1>`_
+
 :0.3.0:
 
     `pre-release
-    <https://github.com/prjemian/rpi_dht_epics/releases>`_
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag.0.3.0>`_
     
         * rename repository as *dhtioc*
         * refactor to use (latest) *adafruit_dht* API
