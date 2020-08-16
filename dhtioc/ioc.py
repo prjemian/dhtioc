@@ -271,7 +271,7 @@ def main():
         default_prefix='dht:',
         desc=dedent(DHT_IOC.__doc__))
 
-    sensor = DHT_Sensor(PIN, READ_PERIOD)
+    sensor = DHT_sensor(PIN, READ_PERIOD)
     server = MyIoc(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
 
     def killer(server):
