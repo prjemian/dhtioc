@@ -1,4 +1,4 @@
 #!/usr/bin/env python3
 
-import dhtioc.sensor
-dhtioc.sensor.main()
+from dhtioc import ioc
+ioc.main()
