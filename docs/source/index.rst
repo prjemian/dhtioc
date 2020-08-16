@@ -17,6 +17,9 @@ Provide humidity and temperature using EPICS and Raspberry Pi
    code/*
    changes
 
+References
+-------------
+
 * `Balena Etcher <https://www.balena.io/etcher/>`_
 * `caproto <https://github.com/caproto/caproto>`_
 * `EPICS <https://epics.anl.gov/>`_
