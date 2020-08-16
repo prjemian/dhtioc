@@ -6,9 +6,11 @@ Change History
 
 :0.3.0:
 
-    `rename & refactor
+    `pre-release
     <https://github.com/prjemian/rpi_dht_epics/releases>`_
-    repository as *dhtioc*, use *adafruit_dht* API
+    
+        * rename repository as *dhtioc*
+        * refactor to use (latest) *adafruit_dht* API
 
 :0.2.0:
 
