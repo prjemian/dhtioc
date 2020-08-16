@@ -1,4 +1,5 @@
-"""Analyze signal for its recent trend.
+"""
+Analyze signal for its recent trend.
 
 .. autosummary::
     ~Trend
@@ -56,7 +57,7 @@ class Trend:
         return self.trend
 
     def __str__(self):
-        """default string."""
+        """Default string."""
         if self.slope is None:
             return "no trend yet"
         else:

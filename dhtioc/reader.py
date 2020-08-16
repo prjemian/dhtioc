@@ -61,7 +61,7 @@ class DHT_sensor:
         self.read_in_background_thread()
 
     def __str__(self):
-        """default string."""
+        """Default string."""
         if self.ready:
             return f"RH={self.humidity:.1f}% T={self.temperature*9/5+32:.1f}F"
         else:
