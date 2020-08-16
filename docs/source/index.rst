@@ -18,7 +18,6 @@ Provide humidity and temperature using EPICS and Raspberry Pi
    changes
 
 
-
 Indices and tables
 ==================
 

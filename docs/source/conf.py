@@ -14,7 +14,6 @@ import os
 import sys
 # sys.path.insert(0, os.path.abspath('.'))
 sys.path.insert(0, os.path.abspath(os.path.join('..', '..')))
-import dhtioc
 
 
 # -- Project information -----------------------------------------------------
@@ -59,4 +58,7 @@ html_static_path = ['_static']
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 # http://www.sphinx-doc.org/en/master/usage/extensions/autodoc.html#confval-autodoc_mock_imports
-autodoc_mock_imports = "Adafruit_DHT caproto".split()
+autodoc_mock_imports = []
+autodoc_mock_imports.append("adafruit_dht")
+autodoc_mock_imports.append("board")
+autodoc_mock_imports.append("caproto")

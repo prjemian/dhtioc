@@ -39,6 +39,7 @@ class DHT_IOC(PVGroup):
         ~temperature_f
         ~temperature_f_raw
         ~temperature_trend
+
     """
 
     counter = pvproperty(
