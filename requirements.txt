@@ -1,3 +1,1 @@
-adafruit_blinka
-adafruit_dht
 caproto
