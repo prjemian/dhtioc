@@ -158,8 +158,7 @@ class MyIoc(PVGroup):
                 await self.temperature_f.write(value=C2F(self._temperature))
                 await self.temperature_trend.write(value=self._temperature_trend.slope)
 
-                c = self.counter.value
-                self.counter.write(value=c + 1)
+                await self.counter.write(value=c + self.counter.value)
 
             while time.time() < t_next_read:
                 await async_lib.library.sleep(INNER_LOOP_SLEEP)
