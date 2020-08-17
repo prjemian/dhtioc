@@ -80,7 +80,7 @@ class DHT_IOC(PVGroup):
         precision=4,
         record='ai')
     humidity_trend_array = pvproperty(
-        value=[],
+        value=[0,],
         dtype=float,
         read_only=True,
         name='humidity:trend:array',
@@ -134,7 +134,7 @@ class DHT_IOC(PVGroup):
         precision=4,
         record='ai')
     temperature_trend_array = pvproperty(
-        value=[],
+        value=0,,
         dtype=float,
         read_only=True,
         name='temperature:trend:array',
@@ -143,7 +143,18 @@ class DHT_IOC(PVGroup):
         precision=4,
         record='waveform')
     trend_axis_array = pvproperty(
-        value=[],
+        value=[0,],
+        dtype=float,
+        read_only=True,
+        name='trend_axis',
+        doc="1-k, k=smoothing factor",
+        units="a.u.",
+        precision=4,
+        record='waveform')
+
+    def __init__(self, *args, sensor, report_period, **kwargs):
+        """Constructor."""
+        super()],
         dtype=float,
         read_only=True,
         name='trend_axis',
