@@ -164,11 +164,62 @@ Installation of the project code
     cd ~/Documents
     git clone https://github.com/prjemian/dhtioc
     cd dhtioc/
+    pip3 install -e .
+    chmod +x dhtioc_manage.sh
+    cp dhtioc_manage.sh ${HOME}/.local/bin/
 
-Run the project
-***************
+Run the IOC : command line
+******************************
 
 ::
 
-    ./runner.py -h
-    ./runner.py --list-pvs --prefix ${HOSTNAME}:
+    dhtioc -h
+    dhtioc --list-pvs --prefix ${HOSTNAME}:
+
+Run the IOC : automatically
+********************************
+
+With a bash shell script, the ``dhtioc`` program
+can be started or stopped.  When this script is added
+as a periodic ``cron`` task, the program will start
+automatically if it has stopped.
+
+::
+
+    pi@rpi170f:~/Documents/dhtioc $ ./dhtioc_manage.sh
+    Usage: dhtioc_manage.sh {start|stop|restart|status|checkup|console|run}
+
+        COMMANDS
+            console   attach to IOC console if IOC is running in screen
+            checkup   check that IOC is running, restart if not
+            restart   restart IOC
+            run       run IOC in console (not screen)
+            start     start IOC
+            status    report if IOC is running
+            stop      stop IOC
+
+* start the IOC: ``dhtioc_manage.sh start``
+* stop the IOC: ``dhtioc_manage.sh stop``
+* restart the IOC: ``dhtioc_manage.sh restart``
+* is the IOC running: ``dhtioc_manage.sh status``
+* start IOC if not running: ``dhtioc_manage.sh checkup``
+
+Add ``checkup`` to periodic tasks
+----------------------------------
+
+The ``cron`` program runs periodic tasks.  It is flexible to configure.
+The following line is the configuration to run the ``checkup`` every two
+minutes (``*/2``).  Any output (both print and error) will be discarded.
+
+::
+
+    */2 * * * * /home/pi/.local/bin/dhtioc_manage.sh checkup 2>&1 > /dev/null
+
+Add this line to the list of periodic tasks using an editor (you'll
+be asked which editor, pick ``nano`` if you aren't sure which)::
+
+    crontab -e
+
+Scroll to the bottom of the file and enter the line above on a *new*
+line.  Save the file and exit the editor.  Within a couple minutes,
+the IOC should start automatically.
