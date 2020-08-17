@@ -165,8 +165,8 @@ Installation of the project code
     git clone https://github.com/prjemian/dhtioc
     cd dhtioc/
     pip3 install -e .
-    chmod +x dhtioc_manage.sh
-    cp dhtioc_manage.sh ${HOME}/.local/bin/
+    chmod +x dhtioc/dhtioc_manage.sh
+    cp dhtioc/dhtioc_manage.sh ${HOME}/.local/bin/
 
 Run the IOC : command line
 ******************************
@@ -186,7 +186,7 @@ automatically if it has stopped.
 
 ::
 
-    pi@rpi170f:~/Documents/dhtioc $ ./dhtioc_manage.sh
+    pi@rpi170f:~/Documents/dhtioc $ dhtioc_manage.sh
     Usage: dhtioc_manage.sh {start|stop|restart|status|checkup|console|run}
 
         COMMANDS
