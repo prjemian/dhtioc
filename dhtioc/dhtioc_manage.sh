@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# manage the IOC for apsbss
+# manage the IOC for dhtioc
 
 #--------------------
 # change the program defaults here
