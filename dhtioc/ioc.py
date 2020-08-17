@@ -134,7 +134,7 @@ class DHT_IOC(PVGroup):
         precision=4,
         record='ai')
     temperature_trend_array = pvproperty(
-        value=0,,
+        value=[0,],
         dtype=float,
         read_only=True,
         name='temperature:trend:array',
