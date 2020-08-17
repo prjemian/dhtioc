@@ -37,7 +37,7 @@ export SCREEN=/usr/bin/screen
 function checkpid() {
     MY_UID=$(id -u)
     # # The '\$' is needed in the pgrep pattern to select vm7, but not vm7.sh
-    IOC_PID=$(pgrep "${IOC_BINARY}"\$ -u "${MY_UID}")
+    IOC_PID=$(pgrep "$(basename ${IOC_BINARY})"\$ -u "${MY_UID}")
     # #!echo "IOC_PID=${IOC_PID}"
 
     if [ "${IOC_PID}" != "" ] ; then
@@ -144,7 +144,7 @@ function start() {
         # Run SESSION_NAME inside a screen session
         CMD="${SCREEN} -dm -S ${SESSION_NAME} -h 5000 ${START_IOC_COMMAND}"
         echo "# $(date --iso-8601=seconds) ${CMD}" > /home/pi/cmd.log
-        ${CMD} 2>&1 &
+        ${CMD}
     fi
 }
 
