@@ -211,16 +211,19 @@ def main():
     from .reader import DHT_sensor, PIN, READ_PERIOD
     import datetime
 
-    print(f"{datetime.datetime.now()}  {__file__}")
+    with open("/home/pi/ioc.log", "w+") as f:
+        f.write(f"{datetime.datetime.now()}  {__file__}\n")
 
     ioc_options, run_options = ioc_arg_parser(
         default_prefix='dht:',
         desc=dedent(DHT_IOC.__doc__))
 
     sensor = DHT_sensor(PIN, READ_PERIOD)
-    print(f"{datetime.datetime.now()}  {sensor.t0} {sensor}")
+    with open("/home/pi/ioc.log", "w+") as f:
+        f.write(f"{datetime.datetime.now()}  {sensor.t0} {sensor}\n")
     server = DHT_IOC(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
-    print(f"{datetime.datetime.now()}  {server.smoothing} {server}")
+    with open("/home/pi/ioc.log", "w+") as f:
+        f.write(f"{datetime.datetime.now()}  {server.smoothing} {server}\n")
 
     atexit.register(sensor.terminate_background_thread, server)
     run_ioc(server.pvdb, **run_options)
