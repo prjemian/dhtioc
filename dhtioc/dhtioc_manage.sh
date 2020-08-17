@@ -143,7 +143,7 @@ function start() {
         cd "${IOC_STARTUP_DIR}"
         # Run SESSION_NAME inside a screen session
         CMD="${SCREEN} -dm -S ${SESSION_NAME} -h 5000 ${START_IOC_COMMAND}"
-        echo "# $(date --iso-8601=seconds) ${CMD}" > /home/pi/cmd.log
+        # echo "# $(date --iso-8601=seconds) ${CMD}" > /home/pi/cmd.log
         ${CMD}
     fi
 }
