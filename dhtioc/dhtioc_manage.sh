@@ -30,6 +30,7 @@ fi
 # echo "START_IOC_COMMAND = ${START_IOC_COMMAND}"
 # echo "SHELL_SCRIPT_NAME = ${SHELL_SCRIPT_NAME}"
 # echo "IOC_STARTUP_DIR = ${IOC_STARTUP_DIR}"
+export SCREEN=/usr/bin/screen
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -60,7 +61,7 @@ function checkpid() {
                 arr=($P_PID)
                 P_PID=${arr[0]}
                 SCREEN_SESSION="${P_PID}.${SESSION_NAME}"
-                SCREEN_MATCH=$(screen -ls "${SCREEN_SESSION}" | grep "${SESSION_NAME}")
+                SCREEN_MATCH=$(${SCREEN} -ls "${SCREEN_SESSION}" | grep "${SESSION_NAME}")
                 if [ "${SCREEN_MATCH}" != "" ] ; then
                     # IOC is running in screen
                     IOC_DOWN=0
@@ -82,7 +83,7 @@ function checkup () {
     if ! checkpid; then
         echo "# $(date --iso-8601=seconds)"
         restart
-        echo "# $(date --iso-8601=seconds) $(screen -ls)"
+        echo "# $(date --iso-8601=seconds) $(${SCREEN} -ls)"
         # sleep 10
         # echo "# $(date --iso-8601=seconds) ${IOC_PREFIX}counter=$(caproto-get ${IOC_PREFIX}counter)"
         # sleep 2
@@ -95,7 +96,7 @@ function console () {
         # The -r flag will only connect if no one is attached to the session
         #!screen -r "${SESSION_NAME}"
         # The -x flag will connect even if someone is attached to the session
-        screen -x "${SCREEN_SESSION}"
+        ${SCREEN} -x "${SCREEN_SESSION}"
     else
         echo "${SCREEN_NAME} is not running"
     fi
@@ -139,7 +140,7 @@ function start() {
         echo "Starting ${SESSION_NAME} with IOC prefix ${IOC_PREFIX}"
         cd "${IOC_STARTUP_DIR}"
         # Run SESSION_NAME inside a screen session
-        CMD="screen -dm -S ${SESSION_NAME} -h 5000 ${START_IOC_COMMAND}"
+        CMD="${SCREEN} -dm -S ${SESSION_NAME} -h 5000 ${START_IOC_COMMAND}"
         ${CMD}
     fi
 }
