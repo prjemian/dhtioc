@@ -154,17 +154,6 @@ class DHT_IOC(PVGroup):
 
     def __init__(self, *args, sensor, report_period, **kwargs):
         """Constructor."""
-        super().__init__(*arg, **kwargs)
-        dtype=float,
-        read_only=True,
-        name='trend_axis',
-        doc="1-k, k=smoothing factor",
-        units="a.u.",
-        precision=4,
-        record='waveform')
-
-    def __init__(self, *args, sensor, report_period, **kwargs):
-        """Constructor."""
         super().__init__(*args, **kwargs)
 
         self.device = sensor
@@ -177,7 +166,6 @@ class DHT_IOC(PVGroup):
         self._temperature_trend = Trend()
 
         atexit.register(self.device.terminate_background_thread)
-
 
     @humidity.startup
     async def humidity(self, instance, async_lib):
