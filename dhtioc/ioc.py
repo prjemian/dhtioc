@@ -146,8 +146,8 @@ class DHT_IOC(PVGroup):
         value=[0,0,0,0,0,0,0,],
         dtype=float,
         read_only=True,
-        name='trend_axis',
-        doc="1-k, k=smoothing factor",
+        name='trend:raw_fraction',
+        doc="fraction of raw data in trend",
         units="a.u.",
         precision=4,
         record='waveform')
