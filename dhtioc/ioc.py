@@ -154,7 +154,7 @@ class DHT_IOC(PVGroup):
 
     def __init__(self, *args, sensor, report_period, **kwargs):
         """Constructor."""
-        super()],
+        super().__init__(*arg, **kwargs)
         dtype=float,
         read_only=True,
         name='trend_axis',
