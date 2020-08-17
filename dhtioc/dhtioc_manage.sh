@@ -83,7 +83,7 @@ function checkup () {
         echo "# $(date --iso-8601=seconds)"
         restart
         sleep 20
-        echo "# $(date --iso-8601=seconds) counter=$(caproto-get ${IOC_PREFIX}counter)"
+        echo "# $(date --iso-8601=seconds) ${IOC_PREFIX}counter=$(caproto-get ${IOC_PREFIX}counter)"
     fi
 }
 
