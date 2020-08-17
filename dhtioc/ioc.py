@@ -224,6 +224,11 @@ def main():
     server = DHT_IOC(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
     with open("/home/pi/ioc.log", "a") as f:
         f.write(f"{datetime.datetime.now()}  {server.smoothing} {server}\n")
+    
+    @atexit.register
+    def terminator(*args, **kwargs):
+        with open("/home/pi/ioc.log", "a") as f:
+            f.write(f"{datetime.datetime.now()}  exiting args={args} kwargs={kwargs}\n")
 
     atexit.register(sensor.terminate_background_thread, server)
     run_ioc(server.pvdb, **run_options)
