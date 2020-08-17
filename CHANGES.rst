@@ -4,6 +4,11 @@
 Change History
 ##############
 
+:1.0.0: released 2020-08-17
+
+    `Initial release
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag.1.0.0>`_
+
 :0.3.3:
 
     `waveforms
