@@ -81,7 +81,9 @@ function checkpid() {
 function checkup () {
     if ! checkpid; then
         echo "# $(date --iso-8601=seconds)"
-        restart
+        # restart
+        stop
+        start
         sleep 10
         echo "# $(date --iso-8601=seconds) ${IOC_PREFIX}counter=$(caproto-get ${IOC_PREFIX}counter)"
         sleep 2
