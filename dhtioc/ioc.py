@@ -209,13 +209,18 @@ class DHT_IOC(PVGroup):
 def main():
     """Entry point for command-line program."""
     from .reader import DHT_sensor, PIN, READ_PERIOD
+    import datetime
+
+    print(f"{datetime.datetime.now()}  {__file__}")
 
     ioc_options, run_options = ioc_arg_parser(
         default_prefix='dht:',
         desc=dedent(DHT_IOC.__doc__))
 
     sensor = DHT_sensor(PIN, READ_PERIOD)
+    print(f"{datetime.datetime.now()}  {sensor.t0} {sensor}")
     server = DHT_IOC(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
+    print(f"{datetime.datetime.now()}  {server.smoothing} {server}")
 
     atexit.register(sensor.terminate_background_thread, server)
     run_ioc(server.pvdb, **run_options)
