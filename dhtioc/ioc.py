@@ -34,11 +34,14 @@ class DHT_IOC(PVGroup):
         ~humidity
         ~humidity_raw
         ~humidity_trend
+        ~humidity_trend_array
         ~temperature
         ~temperature_raw
         ~temperature_f
         ~temperature_f_raw
         ~temperature_trend
+        ~temperature_trend_array
+        ~trend_axis
 
     """
 
@@ -76,6 +79,15 @@ class DHT_IOC(PVGroup):
         units="a.u.",
         precision=4,
         record='ai')
+    humidity_trend_array = pvproperty(
+        value=[0,0,0,0,0,0,0,],
+        dtype=float,
+        read_only=True,
+        name='humidity:trend:array',
+        doc="relative humidity trend",
+        units="%",
+        precision=4,
+        record='waveform')
     temperature = pvproperty(
         value=0,
         dtype=float,
@@ -121,6 +133,24 @@ class DHT_IOC(PVGroup):
         units="a.u.",
         precision=4,
         record='ai')
+    temperature_trend_array = pvproperty(
+        value=[0,0,0,0,0,0,0,],
+        dtype=float,
+        read_only=True,
+        name='temperature:trend:array',
+        doc="temperature trend",
+        units="C",
+        precision=4,
+        record='waveform')
+    trend_axis_array = pvproperty(
+        value=[0,0,0,0,0,0,0,],
+        dtype=float,
+        read_only=True,
+        name='trend_axis',
+        doc="1-k, k=smoothing factor",
+        units="a.u.",
+        precision=4,
+        record='waveform')
 
     def __init__(self, *args, sensor, report_period, **kwargs):
         """Constructor."""
@@ -137,7 +167,6 @@ class DHT_IOC(PVGroup):
 
         atexit.register(self.device.terminate_background_thread)
 
-
     @humidity.startup
     async def humidity(self, instance, async_lib):
         """Set the humidity, temperature and other PVs."""
@@ -152,6 +181,12 @@ class DHT_IOC(PVGroup):
                 await self.humidity.write(value=self._humidity)
                 await self.humidity_trend.write(value=self._humidity_trend.slope)
 
+                keys = sorted(self._humidity_trend.cache.keys())
+                arr = [1-factor for factor in keys]
+                await self.trend_axis_array.write(value=arr)
+                arr = [self._humidity_trend.cache[factor] for factor in keys]
+                await self.humidity_trend_array.write(value=arr)
+
                 raw = self.device.temperature
                 self._temperature = smooth(raw, self.smoothing, self._temperature)
                 self._temperature_trend.compute(raw)
@@ -160,6 +195,10 @@ class DHT_IOC(PVGroup):
                 await self.temperature.write(value=self._temperature)
                 await self.temperature_f.write(value=C2F(self._temperature))
                 await self.temperature_trend.write(value=self._temperature_trend.slope)
+
+                # assumes same keys for humidity & temperature trends
+                arr = [self._temperature_trend.cache[factor] for factor in keys]
+                await self.temperature_trend_array.write(value=arr)
 
                 await self.counter.write(value=self.counter.value + 1)
 
