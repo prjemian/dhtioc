@@ -210,7 +210,7 @@ class StatsRegClass:
 
     def determinant(self):
         '''Compute and return the determinant of the square matrices.
-        
+
         ::
 
           |  sum_w   sum_x      |          |  sum_w   sum_y      |
