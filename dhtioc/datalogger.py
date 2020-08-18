@@ -13,7 +13,6 @@ Record raw values in data files.
 import datetime
 import logging
 import os
-import sys
 import time
 
 logger = logging.getLogger(__name__)
@@ -79,7 +78,7 @@ class DataLogger:
             *str* :
             File to be created.  Absolute path.
         """
-        path, base_file_name = os.path.split(fname)
+        path = os.path.split(fname)[0]
 
         # create path as needed
         os.makedirs(path, exist_ok=True)

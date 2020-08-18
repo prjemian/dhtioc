@@ -156,11 +156,10 @@ class DHT_IOC(PVGroup):
     def __init__(self, *args, sensor, report_period, **kwargs):
         """Constructor."""
         super().__init__(*args, **kwargs)
-        print(f"args = {args}")
-        print(f"kwargs = {kwargs}")
 
         self.device = sensor
         self.period = report_period
+        self.prefix = kwargs.get("prefix", "PREFIX NOT PROVIDED")
         self.smoothing = SMOOTHING_FACTOR
 
         self._humidity = None
@@ -168,7 +167,7 @@ class DHT_IOC(PVGroup):
         self._temperature = None
         self._temperature_trend = Trend()
 
-        # self.datalogger = DataLogger("TODO:")
+        self.datalogger = DataLogger(self.prefix)
 
         atexit.register(self.device.terminate_background_thread)
 
@@ -207,7 +206,7 @@ class DHT_IOC(PVGroup):
 
                 await self.counter.write(value=self.counter.value + 1)
 
-                # self.datalogger.record(rh_raw, t_raw)
+                self.datalogger.record(rh_raw, t_raw)
 
             while time.time() < t_next_read:
                 await async_lib.library.sleep(INNER_LOOP_SLEEP)
