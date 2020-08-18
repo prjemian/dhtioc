@@ -4,6 +4,11 @@
 Change History
 ##############
 
+:1.1.0: expected release 2020-09
+
+    `add (local) raw data logger feature
+    <https://github.com/prjemian/dhtioc/issues/38>`_
+
 :1.0.0: released 2020-08-17
 
     `Initial release
