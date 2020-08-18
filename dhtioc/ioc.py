@@ -17,6 +17,7 @@ from caproto.server import pvproperty, PVGroup, ioc_arg_parser, run as run_ioc
 from textwrap import dedent
 import time
 
+from .datalogger import DataLogger
 from .trend_analysis import SMOOTHING_FACTOR, Trend
 from .utils import C2F, smooth
 
@@ -155,6 +156,8 @@ class DHT_IOC(PVGroup):
     def __init__(self, *args, sensor, report_period, **kwargs):
         """Constructor."""
         super().__init__(*args, **kwargs)
+        print(f"args = {args}")
+        print(f"kwargs = {kwargs}")
 
         self.device = sensor
         self.period = report_period
@@ -165,6 +168,8 @@ class DHT_IOC(PVGroup):
         self._temperature = None
         self._temperature_trend = Trend()
 
+        # self.datalogger = DataLogger("TODO:")
+
         atexit.register(self.device.terminate_background_thread)
 
     @humidity.startup
@@ -174,10 +179,10 @@ class DHT_IOC(PVGroup):
         while True:
             t_next_read += self.period
             if self.device.ready:
-                raw = self.device.humidity
-                self._humidity = smooth(raw, self.smoothing, self._humidity)
-                self._humidity_trend.compute(raw)
-                await self.humidity_raw.write(value=raw)
+                rh_raw = self.device.humidity
+                self._humidity = smooth(rh_raw, self.smoothing, self._humidity)
+                self._humidity_trend.compute(rh_raw)
+                await self.humidity_raw.write(value=rh_raw)
                 await self.humidity.write(value=self._humidity)
                 await self.humidity_trend.write(value=self._humidity_trend.slope)
 
@@ -187,11 +192,11 @@ class DHT_IOC(PVGroup):
                 arr = [self._humidity_trend.cache[factor] for factor in keys]
                 await self.humidity_trend_array.write(value=arr)
 
-                raw = self.device.temperature
-                self._temperature = smooth(raw, self.smoothing, self._temperature)
-                self._temperature_trend.compute(raw)
-                await self.temperature_raw.write(value=raw)
-                await self.temperature_f_raw.write(value=C2F(raw))
+                t_raw = self.device.temperature
+                self._temperature = smooth(t_raw, self.smoothing, self._temperature)
+                self._temperature_trend.compute(t_raw)
+                await self.temperature_raw.write(value=t_raw)
+                await self.temperature_f_raw.write(value=C2F(t_raw))
                 await self.temperature.write(value=self._temperature)
                 await self.temperature_f.write(value=C2F(self._temperature))
                 await self.temperature_trend.write(value=self._temperature_trend.slope)
@@ -201,6 +206,8 @@ class DHT_IOC(PVGroup):
                 await self.temperature_trend_array.write(value=arr)
 
                 await self.counter.write(value=self.counter.value + 1)
+
+                # self.datalogger.record(rh_raw, t_raw)
 
             while time.time() < t_next_read:
                 await async_lib.library.sleep(INNER_LOOP_SLEEP)
