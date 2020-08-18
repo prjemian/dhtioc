@@ -33,6 +33,7 @@ class DataLogger:
     """
 
     def __init__(self, ioc_prefix, path=None):
+        """Constructor."""
         self.prefix = ioc_prefix
         self.base_path = path or os.path.abspath(
             os.path.join(
