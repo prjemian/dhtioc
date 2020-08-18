@@ -166,7 +166,8 @@ Installation of the project code
     cd dhtioc/
     pip3 install -e .
     chmod +x dhtioc/dhtioc_manage.sh
-    cp dhtioc/dhtioc_manage.sh ${HOME}/.local/bin/
+    pushd ${HOME}/.local/bin
+    ln -s ${HOME}/Documents/dhtioc/dhtioc/dhtioc_manage.sh ./
 
 Run the IOC : command line
 ******************************
@@ -223,3 +224,19 @@ be asked which editor, pick ``nano`` if you aren't sure which)::
 Scroll to the bottom of the file and enter the line above on a *new*
 line.  Save the file and exit the editor.  Within a couple minutes,
 the IOC should start automatically.
+
+Look for the data log files
+********************************
+
+Once the IOC is running and has started colelcting valid readings
+from the DHT22 sensor, there should be log files under
+`~/Documents/dhtioc_raw/` based on the year, month, and day.
+A new log file will be written each day (so no file get more than about 1 MB).
+These are text files with whitespace as separator between columns.
+
+EXAMPLE
+
+```
+```
+
+
