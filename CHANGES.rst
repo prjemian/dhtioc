@@ -4,6 +4,11 @@
 Change History
 ##############
 
+:1.1.1: released 2020-08-20
+
+    `OSError stopped acquisition
+    <https://github.com/prjemian/dhtioc/issues/40>`_
+
 :1.1.0: released 2020-08-18
 
     `add (local) raw data logger feature
@@ -33,7 +38,7 @@ Change History
 
     `pre-release
     <https://github.com/prjemian/rpi_dht_epics/releases/tag.0.3.0>`_
-    
+
         * rename repository as *dhtioc*
         * refactor to use (latest) *adafruit_dht* API
 
