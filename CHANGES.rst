@@ -4,6 +4,11 @@
 Change History
 ##############
 
+:1.1.2: release expected -tba-
+
+    `add version number to data files
+    <https://github.com/prjemian/dhtioc/issues/42>`_
+
 :1.1.1: released 2020-08-20
 
     `OSError stopped acquisition

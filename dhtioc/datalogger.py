@@ -14,6 +14,7 @@ import datetime
 import logging
 import os
 import time
+from .__init__ import __version__
 
 logger = logging.getLogger(__name__)
 
@@ -94,6 +95,7 @@ class DataLogger:
                 f"# file: {fname}\n"
                 f"# created: {created}\n"
                 f"# program: dhtioc\n"
+                f"# version: {__version__}\n"
                 f"# URL: https://dhtioc.readthedocs.io/\n"
                 f"#\n"
                 f"# IOC prefix: {self.prefix}\n"
