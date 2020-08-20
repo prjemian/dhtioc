@@ -73,7 +73,7 @@ class DHT_sensor:
             self.temperature = self.sensor.temperature
             self.humidity = self.sensor.humidity
             logger.info(f"{time.time()-self.t0:.2f} {self}")
-        except RuntimeError as exc:     # be prepared, it happens too much
+        except Exception as exc:     # be prepared, it happens too much
             logger.debug(f"{time.time()-self.t0:.2f} {exc}")
 
     @run_in_thread
