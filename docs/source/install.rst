@@ -16,16 +16,16 @@ There are several steps to configure a new RaspberryPi for use.
 We'll follow (more or less) this guide from Adafruit:
 https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
 
-1. :ref:`Parts list <partslist>`
-1. Connect a DHT22 sensor to the RPi
-1. Prepare the Operating System media
-1. Boot the RPi
-1. Pick a unique host name
-1. ``raspi-config``
-1. Apply Operating system updates
-1. Enable the hardware interfaces used by this project
-1. Make *Python v3* be the default ``python``
-1. Reboot
+#. :ref:`Parts list <partslist>`
+#. Connect a DHT22 sensor to the RPi
+#. Prepare the Operating System media
+#. Boot the RPi
+#. Pick a unique host name
+#. ``raspi-config``
+#. Apply Operating system updates
+#. Enable the hardware interfaces used by this project
+#. Make *Python v3* be the default ``python``
+#. Reboot
 
 Connect the DHT22 sensor
 ------------------------
@@ -231,6 +231,9 @@ program will start automatically if it has stopped.
 * is the IOC running: ``dhtioc_manage.sh status``
 * start IOC if not running: ``dhtioc_manage.sh checkup``
 
+
+.. index:: cron, crontab, periodic tasks
+
 Add ``checkup`` and ``restart`` to periodic tasks
 -------------------------------------------------
 
@@ -263,6 +266,8 @@ asked which editor, pick ``nano`` if you aren't sure which)::
 Scroll to the bottom of the file and enter the line above on a *new*
 line.  Save the file and exit the editor.  Within a couple minutes, the
 IOC should start automatically.
+
+.. index:: log files
 
 Look for the data log files
 ********************************

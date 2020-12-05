@@ -6,17 +6,7 @@
 dhtioc
 ======
 
-Provide humidity and temperature using EPICS and Raspberry Pi
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:
-   :glob:
-
-   install
-   parts
-   code/*
-   changes
+Provide humidity and temperature using EPICS and Raspberry Pi.
 
 .. figure:: _static/DHT22-connected-to-zerow.jpg
    :width: 40%
@@ -34,6 +24,16 @@ Typical measurements from *dhtioc* plotted:
     Definitely rainy on Nov. 14-15.  Also, some rain on Nov. 10.
 
     Plotting software not part of this package.  Yet.
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+   :glob:
+
+   install
+   parts
+   code/*
+   changes
 
 
 References

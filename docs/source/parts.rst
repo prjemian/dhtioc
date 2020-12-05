@@ -18,11 +18,15 @@ Parts, Purchasing
        Exposed pins when a full GPIO header is soldered
        to the RPi Zero board.
 
+.. index:: NextCloudPi
+
 * RPi 4 running `NextCloudPi <https://raspberrytips.com/install-nextcloud-raspberry-pi/>`_ :
   Follow the wiring and installation instructions to add *dhtioc* to
   your NextCloudPi server!
 
 .. tip:: Enclosures
+
+   .. index: enclosure
 
    For the best measurement of ambient conditions, place the DHT22
    sensor head *outside* of the enclosure. Place the sensor *inside* to
@@ -38,6 +42,8 @@ Parts List
    2. SD card for the RPi, 4GB or larger (if you don't have)
 
    3. enclosure or case for the RPi (**suggested**, optional)
+
+.. index:: DHT22
 
 2. DHT22 (AM2302) Digital Humidity & Temperature sensor
 
@@ -57,6 +63,8 @@ Purchasing Suggestions
 * RPi Zero W board:
    https://www.adafruit.com/category/933?src=raspberrypi
 
+.. index: enclosure; indoor
+
 * Adafruit case for the Zero:
   https://www.adafruit.com/product/3252
   *or*
@@ -67,13 +75,17 @@ Purchasing Suggestions
 
       Adafruit enclosure with RPi Zero W for indoors.
 
+.. index: enclosure; outdoor
+
+* outdoor electrical outlet enclosure:
+  https://www.homedepot.com/p/Red-Dot-1-Gang-GFCI-Weatherproof-Non-Metallic-Electrical-Box-Cover-Kit-S355P/204193191
+
   .. figure:: _static/outdoor-enclosure.jpg
       :width: 40%
 
       Outdoor enclosure with RPi Zero W.
 
-* outdoor electrical outlet enclosure:
-  https://www.homedepot.com/p/Red-Dot-1-Gang-GFCI-Weatherproof-Non-Metallic-Electrical-Box-Cover-Kit-S355P/204193191
+.. index:: DHT22
 
 * DHT22 sensor:
   https://www.amazon.com/HiLetgo-Temperature-Humidity-Electronic-Practice/dp/B0795F19W6
