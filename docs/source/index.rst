@@ -33,6 +33,8 @@ Typical measurements from *dhtioc* plotted:
     Note the unseasonably warm temperatures until Nov. 10.
     Definitely rainy on Nov. 14-15.  Also, some rain on Nov. 10.
 
+    Plotting software not part of this package.  Yet.
+
 
 References
 -------------
