@@ -30,7 +30,6 @@ class DHT_IOC(PVGroup):
     EPICS server (IOC) with humidity & temperature (read-only) PVs.
 
     .. autosummary::
-        ~shutdown_dht_device
         ~counter
         ~humidity
         ~humidity_raw
@@ -42,7 +41,6 @@ class DHT_IOC(PVGroup):
         ~temperature_f_raw
         ~temperature_trend
         ~temperature_trend_array
-        ~trend_axis
 
     """
 
