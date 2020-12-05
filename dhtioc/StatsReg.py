@@ -73,7 +73,7 @@ class StatsRegClass:
         self._ClearResults_()
 
     def Show(self):
-        'contents of the statistics registers'
+        """contents of the statistics registers"""
         print(self.Show.__doc__)
         print("\t%s=%d"        % ('NumPts',   self.count))
         print("\t%s=%g\t%s=%g" % ('SumX  ',   self.sumX,   'SumXX',   self.sumXX))
@@ -209,7 +209,9 @@ class StatsRegClass:
         return self.intercept + x * self.slope
 
     def determinant(self):
-        '''compute and return the determinant of the square matrices::
+        '''Compute and return the determinant of the square matrices.
+
+        ::
 
           |  sum_w   sum_x      |          |  sum_w   sum_y      |
           |  sum_x   sum_(x^2)  |          |  sum_y   sum_(y^2)  |
@@ -389,12 +391,3 @@ if __name__ == '__main__':
         f" {__doc__.strip().splitlines()[0]}"
         )
     __selftest()
-
-
-########### SVN repository information ###################
-# $Date: 2013-12-22 23:08:02 -0600 (Sun, 22 Dec 2013) $
-# $Author: jemian $
-# $Revision: 2001 $
-# $URL: http://poof:8765/svn/regitte/lake-python/trunk/src/jldesmear/api/StatsReg.py $
-# $Id: StatsReg.py 2001 2013-12-23 05:08:02Z jemian $
-########### SVN repository information ###################

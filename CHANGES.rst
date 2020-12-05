@@ -4,41 +4,88 @@
 Change History
 ##############
 
-:0.2.1:
+:1.1.2: release expected -tba-
 
-    * rename repo to *dhtioc*
+    `add version number to data files
+    <https://github.com/prjemian/dhtioc/issues/42>`_
+
+:1.1.1: released 2020-08-20
+
+    `OSError stopped acquisition
+    <https://github.com/prjemian/dhtioc/issues/40>`_
+
+:1.1.0: released 2020-08-18
+
+    `add (local) raw data logger feature
+    <https://github.com/prjemian/dhtioc/issues/38>`_
+
+:1.0.0: released 2020-08-17
+
+    `Initial release
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag.1.0.0>`_
+
+:0.3.3:
+
+    `waveforms
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag.0.3.3>`_
+
+:0.3.2:
+
+    `IOC shell management
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag.0.3.2>`_
+
+:0.3.1:
+
+    `packaging, versioning, and publishing
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag.0.3.1>`_
+
+:0.3.0:
+
+    `pre-release
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag.0.3.0>`_
+
+        * rename repository as *dhtioc*
+        * refactor to use (latest) *adafruit_dht* API
 
 :0.2.0:
 
-    * `<https://github.com/prjemian/rpi_dht_epics/releases/tag/0.2.0>`_ use older DHT API
+    `use older DHT API
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag/0.2.0>`_
 
 :0.1.2:
 
-    * `<https://github.com/prjemian/rpi_dht_epics/releases/tag/0.1.2>`_ analyze signal trends
+    `analyze signal trends
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag/0.1.2>`_
 
 :0.1.1:
 
-    * `<https://github.com/prjemian/rpi_dht_epics/releases/tag/0.1.1>`_ add caproto IOC
+    `add caproto IOC
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag/0.1.1>`_
 
 :0.1.0:
 
-    * `<https://github.com/prjemian/rpi_dht_epics/releases/tag/0.1.0>`_ restart
+    `restart
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag/0.1.0>`_
 
 :0.0.4:
 
-    * `<https://github.com/prjemian/rpi_dht_epics/releases/tag/0.0.4>`_ statistics
+    `statistics
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag/0.0.4>`_
 
 :0.0.3:
 
-    * `<https://github.com/prjemian/rpi_dht_epics/releases/tag/0.0.3>`_ EPICS client version
+    `EPICS client version
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag/0.0.3>`_
 
 :0.0.2:
 
-    * `<https://github.com/prjemian/rpi_dht_epics/releases/tag/0.0.2>`_ initial custom code
+    `initial custom code
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag/0.0.2>`_
 
 :0.0.1:
 
-    * `<https://github.com/prjemian/rpi_dht_epics/releases/tag/0.0.1>`_ proof of example
+    `proof of example
+    <https://github.com/prjemian/rpi_dht_epics/releases/tag/0.0.1>`_
 
 ----------
 

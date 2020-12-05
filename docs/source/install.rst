@@ -4,10 +4,10 @@ Installation
 Prepare a Raspberry Pi (RPi) to read a DHT22 (digital humidity and
 temperature sensor) and post values as an EPICS IOC server.
 
-1. Initial configuration of the RPi
-1. Installation of required libraries
-1. Installation of the project code
-1. Run the project
+#. Initial configuration of the RPi
+#. Installation of required libraries
+#. Installation of the project code
+#. Run the project
 
 Initial Configuration
 *********************
@@ -32,27 +32,29 @@ Connect the DHT22 sensor
 
 TODO: pictures
 
-1. solder pin headers (for RPi Zero-W)
-1. connect DHT signal (center pin) to RPi pin 4 (as shown)
+#. solder pin headers (for RPi Zero-W)
+#. connect DHT signal (center pin) to RPi pin 4 (as shown)
 
 Prepare the Operating System media
 ----------------------------------
 
-1. OS Media choice: micro SD card, 4 GB (larger is not needed for this project but works fine, takes longer to flash AND backup, takes more space to backup)
-1. flash a new Raspberry Pi OS Lite onto a micro SD card (Balena Etcher recommended)
-1. enable SSH login: create empty ``ssh`` file on `boot` partition
-1. configure WiFi: create ``wpa_supplicant.conf`` file on `boot` partition per https://desertbot.io/blog/headless-raspberry-pi-4-ssh-wifi-setup
-1. Make *Python v3* be the default `python` (python v2 is EOL starting 2020).
+#. OS Media choice: micro SD card, 4 GB (larger is not needed for this project but works fine, takes longer to flash AND backup, takes more space to backup)
+#. flash a new Raspberry Pi OS Lite onto a micro SD card (Balena Etcher recommended)
+#. enable SSH login: create empty ``ssh`` file on `boot` partition
+#. configure WiFi: create ``wpa_supplicant.conf`` file on `boot` partition per https://desertbot.io/blog/headless-raspberry-pi-4-ssh-wifi-setup
+#. Make *Python v3* be the default `python` (python v2 is EOL starting 2020).
 
 * https://www.raspberrypi.org/downloads/
 * https://www.balena.io/etcher/
 
+----
+
 Boot the RPi
 ------------
 
-1. install micro SD card in RPi and apply power
-1. identify new RPi IP number on your subnet and login: ``ssh pi@new.I.P.number``
-1. password is ``raspberry`` until you change it (highly recommended)
+#. install micro SD card in RPi and apply power
+#. identify new RPi IP number on your subnet and login: ``ssh pi@new.I.P.number``
+#. password is ``raspberry`` until you change it (highly recommended)
 
 Pick a unique host name
 -----------------------
@@ -64,7 +66,8 @@ number (from ``/proc/cpuinfo``).  We'll start with ``rpi`` (to make the
 host name recognizable), then pick the last four characters
 of the serial number, expecting that to make a unique name::
 
-    echo "Suggested host name: rpi$(cat /proc/cpuinfo  | grep Serial | tail -c 5)"
+    # Suggested host name:
+    echo rpi$(cat /proc/cpuinfo  | grep Serial | tail -c 5)
 
 Use this name in ``raspi-config`` below.
 
@@ -73,13 +76,13 @@ raspi-config
 
 Run ``sudo raspi-config`` and configure these settings:
 
-* 1 change password for user ``pi``
-* 2 Network Options: N1 Hostname -- pick a unique name, see suggestion above
-* 4 Localisation Options: I2 Change Timezone -- (if not set in ``wpa_supplicant.conf`` file)
-* 5 Interfacing Options: P4 SPI -- **Yes**
-* 5 Interfacing Options: P5 I2C -- **Yes**
-* 5 Interfacing Options: P8 Remote GPIO -- **No**
-* 8 Update -- select it
+* *1 change password* for user ``pi``
+* *2 Network Options*: N1 Hostname -- pick a unique name, see suggestion above
+* *4 Localisation Options*: I2 Change Timezone -- (if not set in ``wpa_supplicant.conf`` file)
+* *5 Interfacing Options*: P4 SPI -- **Yes**
+* *5 Interfacing Options*: P5 I2C -- **Yes**
+* *5 Interfacing Options*: P8 Remote GPIO -- **No**
+* *8 Update* -- select it
 
 You may be prompted to reboot now.  Probably best to reboot if you changed the hostname.
 
@@ -104,7 +107,7 @@ Make *Python v3* be the default ``python``
 
 By default, python v2 is what you get when you type ``python``.
 Since python v2 reached the end-of-life after 2019, we want ``python3``
-to be called when we type ``python``.  Here's how to make that happen:
+to be called when we type ``python``.  Here's how to make that happen::
 
     # make python3 the default python
     sudo apt-get install -y python3 git python3-pip
@@ -116,7 +119,13 @@ to be called when we type ``python``.  Here's how to make that happen:
 Reboot
 ------
 
-Finally, after all these steps, reboot the RPi.  ``sudo reboot``
+Finally, after all these steps, reboot the RPi.
+
+::
+
+    sudo reboot
+
+----
 
 Installation of required libraries
 **********************************
@@ -156,11 +165,99 @@ Installation of the project code
     cd ~/Documents
     git clone https://github.com/prjemian/dhtioc
     cd dhtioc/
+    pip3 install -e .
+    chmod +x dhtioc/dhtioc_manage.sh
+    pushd ${HOME}/.local/bin
+    ln -s ${HOME}/Documents/dhtioc/dhtioc/dhtioc_manage.sh ./
 
-Run the project
-***************
+Run the IOC : command line
+******************************
 
 ::
 
-    ./runner.py -h
-    ./runner.py --list-pvs --prefix ${HOSTNAME}:
+    dhtioc -h
+    dhtioc --list-pvs --prefix ${HOSTNAME}:
+
+Run the IOC : automatically
+********************************
+
+With a bash shell script, the ``dhtioc`` program
+can be started or stopped.  When this script is added
+as a periodic ``cron`` task, the program will start
+automatically if it has stopped.
+
+::
+
+    pi@rpi170f:~/Documents/dhtioc $ dhtioc_manage.sh
+    Usage: dhtioc_manage.sh {start|stop|restart|status|checkup|console|run}
+
+        COMMANDS
+            console   attach to IOC console if IOC is running in screen
+            checkup   check that IOC is running, restart if not
+            restart   restart IOC
+            run       run IOC in console (not screen)
+            start     start IOC
+            status    report if IOC is running
+            stop      stop IOC
+
+* start the IOC: ``dhtioc_manage.sh start``
+* stop the IOC: ``dhtioc_manage.sh stop``
+* restart the IOC: ``dhtioc_manage.sh restart``
+* is the IOC running: ``dhtioc_manage.sh status``
+* start IOC if not running: ``dhtioc_manage.sh checkup``
+
+Add ``checkup`` to periodic tasks
+----------------------------------
+
+The ``cron`` program runs periodic tasks.  It is flexible to configure.
+The following line is the configuration to run the ``checkup`` every two
+minutes (``*/2``).  Any output (both print and error) will be discarded.
+
+::
+
+    */2 * * * * /home/pi/.local/bin/dhtioc_manage.sh checkup 2>&1 > /dev/null
+
+Add this line to the list of periodic tasks using an editor (you'll
+be asked which editor, pick ``nano`` if you aren't sure which)::
+
+    crontab -e
+
+Scroll to the bottom of the file and enter the line above on a *new*
+line.  Save the file and exit the editor.  Within a couple minutes,
+the IOC should start automatically.
+
+Look for the data log files
+********************************
+
+Once the IOC is running and has started collecting valid readings
+from the DHT22 sensor, there should be log files under
+`~/Documents/dhtioc_raw/` based on the year, month, and day.
+A new log file will be written each day (so no file get more than about 1 MB).
+These are text files with whitespace as separator between columns.
+
+EXAMPLE
+
+```
+# file: /home/pi/Documents/dhtioc_raw/2020/12/2020-12-05.txt
+# created: 2020-12-05 00:00:00.126145
+# program: dhtioc
+# version: 1.1.1+1.gcd2796d
+# URL: https://dhtioc.readthedocs.io/
+#
+# IOC prefix: rpidec7:
+#
+# time: python timestamp (``time.time()``), seconds (since 1970-01-01T00:00:00 UTC)
+# RH: relative humidity, %
+# T: temperature, C
+#
+# time  RH  T
+1607148000.12 43.0 22.5
+1607148002.13 43.0 22.5
+1607148004.13 43.0 22.5
+1607148006.12 42.9 22.5
+1607148008.13 42.9 22.5
+1607148010.13 42.9 22.5
+1607148012.12 42.9 22.5
+```
+
+

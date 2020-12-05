@@ -1,0 +1,5 @@
+include README.md
+include CHANGES.rst
+include LICENSE
+include versioneer.py
+include dhtioc/_version.py

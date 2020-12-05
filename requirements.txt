@@ -1,0 +1,3 @@
+adafruit-blinka
+adafruit-circuitpython-dht
+caproto

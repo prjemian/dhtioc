@@ -30,7 +30,7 @@ class Trend:
 
     def __init__(self):
         """Constructor."""
-        self.cache = {k: None for k in [0.5, 0.7, 0.8, 0.9, 0.95]}
+        self.cache = {k: None for k in [0.2, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]}
         self.stats = StatsRegClass()
         self.trend = None
         self._computed = False
@@ -57,6 +57,7 @@ class Trend:
         return self.trend
 
     def __str__(self):
+        """Default string."""
         if self.slope is None:
             return "no trend yet"
         else:

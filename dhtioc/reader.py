@@ -2,8 +2,7 @@
 
 __all__ = "DHT_sensor PIN READ_PERIOD".split()
 
-"""
-Read the sensor and cache the values.
+"""Read the sensor and cache the values.
 
 .. autosummary::
     ~DHT_sensor
@@ -62,6 +61,7 @@ class DHT_sensor:
         self.read_in_background_thread()
 
     def __str__(self):
+        """Default string."""
         if self.ready:
             return f"RH={self.humidity:.1f}% T={self.temperature*9/5+32:.1f}F"
         else:
@@ -73,12 +73,12 @@ class DHT_sensor:
             self.temperature = self.sensor.temperature
             self.humidity = self.sensor.humidity
             logger.info(f"{time.time()-self.t0:.2f} {self}")
-        except RuntimeError as exc:     # be prepared, it happens too much
+        except Exception as exc:     # be prepared, it happens too much
             logger.debug(f"{time.time()-self.t0:.2f} {exc}")
 
     @run_in_thread
     def read_in_background_thread(self):
-        """monitor the sensor for new values"""
+        """Monitor the sensor for new values."""
         time_to_read = time.time()
         while self.run_permitted:
             if time.time() >= time_to_read:
