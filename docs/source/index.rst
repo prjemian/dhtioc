@@ -6,7 +6,24 @@
 dhtioc
 ======
 
-Provide humidity and temperature using EPICS and Raspberry Pi
+Provide humidity and temperature using EPICS and Raspberry Pi.
+
+.. figure:: _static/DHT22-connected-to-zerow.jpg
+   :width: 40%
+
+   Assembled *dhtioc* system.
+
+Typical measurements from *dhtioc* plotted:
+
+.. figure:: _static/2020-11-daily-porch.png
+    :width: 80%
+
+    Readings from *dhtioc* system mounted on front porch.
+    Values recorded every few seconds, logged into files.
+    Note the unseasonably warm temperatures until Nov. 10.
+    Definitely rainy on Nov. 14-15.  Also, some rain on Nov. 10.
+
+    Plotting software not part of this package.  Yet.
 
 .. toctree::
    :maxdepth: 2
@@ -14,8 +31,10 @@ Provide humidity and temperature using EPICS and Raspberry Pi
    :glob:
 
    install
+   parts
    code/*
    changes
+
 
 References
 -------------
@@ -30,12 +49,11 @@ References
 * `Statistics - Linear Regression <https://stattrek.com/AP-Statistics-1/Regression.aspx?Tutorial=Stat>`_
 * `Statistics - Correlation and Rgression <https://en.ppt-online.org/186857>`_
 * `Statistics - numpy polyfit <https://data36.com/linear-regression-in-python-numpy-polyfit>`_
-* `Statistics - Weighted least squares<https://en.wikipedia.org/wiki/Weighted_least_squares>`_
+* `Statistics - Weighted least squares <https://en.wikipedia.org/wiki/Weighted_least_squares>`_
 * `Statistics - weighted linear regression <http://www.real-statistics.com/multiple-regression/weighted-linear-regression>`_
 * `Statistics - least squares method <http://www.real-statistics.com/regression/least-squares-method/>`_
 * `Statistics - regression analysis <http://www.real-statistics.com/regression/regression-analysis/>`_
 * `Statistics - Deming regression <http://www.real-statistics.com/regression/deming-regression/deming-regression-basic-concepts/>`_
-
 
 Indices and tables
 ==================
