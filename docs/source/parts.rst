@@ -26,7 +26,7 @@ Parts, Purchasing
 
 .. tip:: Enclosures
 
-   .. index: enclosure
+   .. index:: enclosure
 
    For the best measurement of ambient conditions, place the DHT22
    sensor head *outside* of the enclosure. Place the sensor *inside* to
@@ -63,7 +63,7 @@ Purchasing Suggestions
 * RPi Zero W board:
    https://www.adafruit.com/category/933?src=raspberrypi
 
-.. index: enclosure; indoor
+.. index:: enclosure; indoor
 
 * Adafruit case for the Zero:
   https://www.adafruit.com/product/3252
@@ -75,7 +75,7 @@ Purchasing Suggestions
 
       Adafruit enclosure with RPi Zero W for indoors.
 
-.. index: enclosure; outdoor
+.. index:: enclosure; outdoor
 
 * outdoor electrical outlet enclosure:
   https://www.homedepot.com/p/Red-Dot-1-Gang-GFCI-Weatherproof-Non-Metallic-Electrical-Box-Cover-Kit-S355P/204193191
