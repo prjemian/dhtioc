@@ -16,25 +16,16 @@ Typical measurements from *dhtioc* plotted:
 
     Readings from *dhtioc* system mounted on porch. Values recorded
     every few seconds, logged into files. Note the unseasonably warm
-    temperatures until Nov. 10. Definitely rainy on Nov. 14-15.  Also,
-    some rain on Nov. 10.
+    temperatures until Nov. 10 when the temperature dropped, accompanied
+    by a mild rain. Definitely rainy on Nov. 14-15 (note the 100%
+    humidity).
 
     Plotting software not part of this package.  Yet.
 
+See the :ref:`Table of Contents <contents>` for links to all the
+documentation.
+
 .. toctree::
-   :maxdepth: 2
-   :caption: Table of Contents
-   :glob:
+   :hidden:
 
-   install
-   parts
-   references
-   code/*
-   changes
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   contents
