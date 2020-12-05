@@ -65,7 +65,7 @@ Purchasing Suggestions
 
 .. index:: enclosure; indoor
 
-* Adafruit case for the Zero:
+* typical indoor enclosure (Adafruit case for the Zero):
   https://www.adafruit.com/product/3252
   *or*
   https://chicagodist.com/products/adafruit-raspberry-pi-zero-case
@@ -77,7 +77,7 @@ Purchasing Suggestions
 
 .. index:: enclosure; outdoor
 
-* outdoor electrical outlet enclosure:
+* typical outdoor electrical outlet enclosure:
   https://www.homedepot.com/p/Red-Dot-1-Gang-GFCI-Weatherproof-Non-Metallic-Electrical-Box-Cover-Kit-S355P/204193191
 
   .. figure:: _static/outdoor-enclosure.jpg
