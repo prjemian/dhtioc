@@ -4,7 +4,7 @@ Provide humidity and temperature using EPICS and Raspberry Pi.
 
 Uses
 
-*   DHT22 sensor
+*   DHT22 (AM2302) sensor
 *   Raspberry Pi
 *   EPICS caproto IOC
 
