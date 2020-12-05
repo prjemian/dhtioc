@@ -49,7 +49,7 @@ References
 * `Statistics - Linear Regression <https://stattrek.com/AP-Statistics-1/Regression.aspx?Tutorial=Stat>`_
 * `Statistics - Correlation and Rgression <https://en.ppt-online.org/186857>`_
 * `Statistics - numpy polyfit <https://data36.com/linear-regression-in-python-numpy-polyfit>`_
-* `Statistics - Weighted least squares<https://en.wikipedia.org/wiki/Weighted_least_squares>`_
+* `Statistics - Weighted least squares <https://en.wikipedia.org/wiki/Weighted_least_squares>`_
 * `Statistics - weighted linear regression <http://www.real-statistics.com/multiple-regression/weighted-linear-regression>`_
 * `Statistics - least squares method <http://www.real-statistics.com/regression/least-squares-method/>`_
 * `Statistics - regression analysis <http://www.real-statistics.com/regression/regression-analysis/>`_
