@@ -30,10 +30,35 @@ https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuit
 Connect the DHT22 sensor
 ------------------------
 
-TODO: pictures
+1. If needed, solder a **single-row**, 6-pin *socket* 
+   header to the RPi board, covering
+   `GPIO pins 1,3,5,7,9,11 <https://pinout.xyz>`_
 
-#. solder pin headers (for RPi Zero-W)
-#. connect DHT signal (center pin) to RPi pin 4 (as shown)
+2. Press a **single-row**, 5-pin strip of right-angle header
+   pins into the sockets for pins 1,3,5,7,9, as shown in the next two
+   photos.
+
+   .. figure:: _static/zerow-back-pins-into-6header-sockets.jpg
+       :width: 40%
+
+       Right-angle header pins in 6-socket header soldered to RPi Zero W
+       board.
+
+   .. figure:: _static/zerow-back-pins-into-full-header-sockets.jpg
+       :width: 40%
+
+       Right-angle header pins in full socket header soldered to RPi
+       Zero W board.
+
+3. connect the 3 pins of the DHT22 as follows:
+
+   =========   ========  ==========
+   DHT22 pin   GPIO pin  meaning
+   =========   ========  ==========
+   ``+``       1         *3v3 Power* (+3.3 VDC)
+   ``out``     7         *GPIO 4* (Pin 4, to match the software)
+   ``-``       9         *Ground*
+   =========   ========  ==========
 
 Prepare the Operating System media
 ----------------------------------
@@ -59,12 +84,12 @@ Boot the RPi
 Pick a unique host name
 -----------------------
 
-If you plan on having more than one RPi on your local subnet,
-then you should give a unique to each and every one of them.  You can
-be creative, or mundane.  Here, we name our pi based on its Serial
-number (from ``/proc/cpuinfo``).  We'll start with ``rpi`` (to make the
-host name recognizable), then pick the last four characters
-of the serial number, expecting that to make a unique name::
+If you plan on having more than one RPi on your local subnet, then you
+should give a unique to each and every one of them.  You can be
+creative, or mundane.  Here, we name our pi based on its Serial number
+(from ``/proc/cpuinfo``).  We'll start with ``rpi`` (to make the host
+name recognizable), then pick the last four characters of the serial
+number, expecting that to make a unique name::
 
     # Suggested host name:
     echo rpi$(cat /proc/cpuinfo  | grep Serial | tail -c 5)
@@ -87,27 +112,28 @@ Run ``sudo raspi-config`` and configure these settings:
 You may be prompted to reboot now.  Probably best to reboot if you changed the hostname.
 
 In different versions of RaspberryPi OS and ``raspi-config``, these
-settings may be moved to other submenus.  You might have to hunt for them.
+settings may be moved to other submenus.  You might have to hunt for
+them.
 
 Apply Operating system updates
 ------------------------------
 
-Update the operating system with latest changes, patches, and security items.
-This command only runs the install if the first command (identify the
-packages with available upgrades) succeeds::
+Update the operating system with latest changes, patches, and security
+items. This command only runs the install if the first command (identify
+the packages with available upgrades) succeeds::
 
     sudo apt-get update && sudo apt-get upgrade -y
 
-This step could take some time (5-60 or more), depending on how
-many updates have been released since your download of the OS image
-was released.
+This step could take some time (5-60 or more), depending on how many
+updates have been released since your download of the OS image was
+released.
 
 Make *Python v3* be the default ``python``
 ------------------------------------------
 
-By default, python v2 is what you get when you type ``python``.
-Since python v2 reached the end-of-life after 2019, we want ``python3``
-to be called when we type ``python``.  Here's how to make that happen::
+By default, python v2 is what you get when you type ``python``. Since
+python v2 reached the end-of-life after 2019, we want ``python3`` to be
+called when we type ``python``.  Here's how to make that happen::
 
     # make python3 the default python
     sudo apt-get install -y python3 git python3-pip
@@ -181,10 +207,9 @@ Run the IOC : command line
 Run the IOC : automatically
 ********************************
 
-With a bash shell script, the ``dhtioc`` program
-can be started or stopped.  When this script is added
-as a periodic ``cron`` task, the program will start
-automatically if it has stopped.
+With a bash shell script, the ``dhtioc`` program can be started or
+stopped.  When this script is added as a periodic ``cron`` task, the
+program will start automatically if it has stopped.
 
 ::
 
@@ -206,58 +231,70 @@ automatically if it has stopped.
 * is the IOC running: ``dhtioc_manage.sh status``
 * start IOC if not running: ``dhtioc_manage.sh checkup``
 
-Add ``checkup`` to periodic tasks
-----------------------------------
+Add ``checkup`` and ``restart`` to periodic tasks
+-------------------------------------------------
 
 The ``cron`` program runs periodic tasks.  It is flexible to configure.
-The following line is the configuration to run the ``checkup`` every two
+The following first line is the configuration to run the ``checkup`` every two
 minutes (``*/2``).  Any output (both print and error) will be discarded.
+
+Sometimes, the *dhtioc* will stop logging temperature, such as shown in
+the next chart.  Until the source of that is resolved, the second line
+below will restart the IOC at 3 minutes past the hour, every hour of
+every day.
+
+.. figure:: _static/plot-stalled.png
+    :width: 40%
+
+    The IOC stalled ~2:15 pm, then restarted at 3:03 pm via *cron*
+    task.
+
 
 ::
 
     */2 * * * * /home/pi/.local/bin/dhtioc_manage.sh checkup 2>&1 > /dev/null
+    3 * * * * /home/pi/.local/bin/dhtioc_manage.sh restart 2>&1 > /dev/null
 
-Add this line to the list of periodic tasks using an editor (you'll
-be asked which editor, pick ``nano`` if you aren't sure which)::
+Add these lines to the list of periodic tasks using an editor (you'll be
+asked which editor, pick ``nano`` if you aren't sure which)::
 
     crontab -e
 
 Scroll to the bottom of the file and enter the line above on a *new*
-line.  Save the file and exit the editor.  Within a couple minutes,
-the IOC should start automatically.
+line.  Save the file and exit the editor.  Within a couple minutes, the
+IOC should start automatically.
 
 Look for the data log files
 ********************************
 
-Once the IOC is running and has started collecting valid readings
-from the DHT22 sensor, there should be log files under
-`~/Documents/dhtioc_raw/` based on the year, month, and day.
-A new log file will be written each day (so no file get more than about 1 MB).
+Once the IOC is running and has started collecting valid readings from
+the DHT22 sensor, there should be log files under
+`~/Documents/dhtioc_raw/` based on the year, month, and day. A new log
+file will be written each day (so no file get more than about 1 MB).
 These are text files with whitespace as separator between columns.
 
 EXAMPLE
 
-```
-# file: /home/pi/Documents/dhtioc_raw/2020/12/2020-12-05.txt
-# created: 2020-12-05 00:00:00.126145
-# program: dhtioc
-# version: 1.1.1+1.gcd2796d
-# URL: https://dhtioc.readthedocs.io/
-#
-# IOC prefix: rpidec7:
-#
-# time: python timestamp (``time.time()``), seconds (since 1970-01-01T00:00:00 UTC)
-# RH: relative humidity, %
-# T: temperature, C
-#
-# time  RH  T
-1607148000.12 43.0 22.5
-1607148002.13 43.0 22.5
-1607148004.13 43.0 22.5
-1607148006.12 42.9 22.5
-1607148008.13 42.9 22.5
-1607148010.13 42.9 22.5
-1607148012.12 42.9 22.5
-```
+.. code-block:: text
+   :linenos:
 
-
+   # file: /home/pi/Documents/dhtioc_raw/2020/12/2020-12-05.txt
+   # created: 2020-12-05 00:00:00.126145
+   # program: dhtioc
+   # version: 1.1.1+1.gcd2796d
+   # URL: https://dhtioc.readthedocs.io/
+   #
+   # IOC prefix: rpidec7:
+   #
+   # time: python timestamp (``time.time()``), seconds (since 1970-01-01T00:00:00 UTC)
+   # RH: relative humidity, %
+   # T: temperature, C
+   #
+   # time  RH  T
+   1607148000.12 43.0 22.5
+   1607148002.13 43.0 22.5
+   1607148004.13 43.0 22.5
+   1607148006.12 42.9 22.5
+   1607148008.13 42.9 22.5
+   1607148010.13 42.9 22.5
+   1607148012.12 42.9 22.5
