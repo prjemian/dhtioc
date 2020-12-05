@@ -16,6 +16,7 @@ There are several steps to configure a new RaspberryPi for use.
 We'll follow (more or less) this guide from Adafruit:
 https://learn.adafruit.com/circuitpython-on-raspberrypi-linux/installing-circuitpython-on-raspberry-pi
 
+1. :ref:`Parts list <partslist>`
 1. Connect a DHT22 sensor to the RPi
 1. Prepare the Operating System media
 1. Boot the RPi

@@ -14,9 +14,9 @@ Provide humidity and temperature using EPICS and Raspberry Pi
    :glob:
 
    install
+   parts
    code/*
    changes
-
 
 
 Indices and tables
