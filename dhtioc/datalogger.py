@@ -139,7 +139,8 @@ class DataLogger:
                     f" {temperature:.01f}\n"
                 )
         except Exception as exc:
-            logger.error("Continuing after exception: %s", exc)
+            # FIXME: logger.error("Continuing after exception: %s", exc)
+            print(f"Continuing after exception: {exc}")
 
 
 if __name__ == "__main__":
