@@ -17,6 +17,8 @@ import time
 from .__init__ import __version__
 
 logger = logging.getLogger(__name__)
+logger.setLevel("DEBUG")
+
 
 class DataLogger:
     """
@@ -139,7 +141,7 @@ class DataLogger:
                     f" {temperature:.01f}\n"
                 )
         except Exception as exc:
-            # FIXME: logger.error("Continuing after exception: %s", exc)
+            logger.error("Continuing after exception: %s", exc)
             print(f"Continuing after exception: {exc}")
 
 
