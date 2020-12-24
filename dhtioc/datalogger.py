@@ -37,6 +37,7 @@ class DataLogger:
 
     def __init__(self, ioc_prefix, path=None):
         """Constructor."""
+        logger.info(f"DataLogger starting for {ioc_prefix}")
         self.prefix = ioc_prefix
         self.base_path = path or os.path.abspath(
             os.path.join(
