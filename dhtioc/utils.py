@@ -32,10 +32,12 @@ def run_in_thread(func):
        #...
 
     """
+
     def wrapper(*args, **kwargs):
         thread = threading.Thread(target=func, args=args, kwargs=kwargs)
         thread.start()
         return thread
+
     return wrapper
 
 
@@ -51,5 +53,5 @@ def smooth(reading, factor, previous):
     if previous is None:
         value = reading
     else:
-        value = factor*previous + (1-factor)*reading
+        value = factor * previous + (1 - factor) * reading
     return value

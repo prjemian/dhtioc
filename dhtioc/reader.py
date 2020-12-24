@@ -63,7 +63,9 @@ class DHT_sensor:
     def __str__(self):
         """Default string."""
         if self.ready:
-            return f"RH={self.humidity:.1f}% T={self.temperature*9/5+32:.1f}F"
+            return (
+                f"RH={self.humidity:.1f}% T={self.temperature*9/5+32:.1f}F"
+            )
         else:
             return "no signal yet"
 
@@ -73,7 +75,7 @@ class DHT_sensor:
             self.temperature = self.sensor.temperature
             self.humidity = self.sensor.humidity
             logger.info(f"{time.time()-self.t0:.2f} {self}")
-        except Exception as exc:     # be prepared, it happens too much
+        except Exception as exc:  # be prepared, it happens too much
             logger.debug(f"{time.time()-self.t0:.2f} {exc}")
 
     @run_in_thread
@@ -95,7 +97,7 @@ class DHT_sensor:
         """Signal the background thread to stop."""
         logger.debug("terminate background thread")
         self.run_permitted = False
-        time.sleep(LOOP_SLEEP*4)
+        time.sleep(LOOP_SLEEP * 4)
 
 
 def main():

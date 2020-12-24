@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-__all__ = ["DataLogger",]
+__all__ = [
+    "DataLogger",
+]
 
 """
 Record raw values in data files.
@@ -45,7 +47,7 @@ class DataLogger:
             os.path.join(
                 os.environ.get("HOME", os.path.join("/", "home", "pi")),
                 "Documents",
-                "dhtioc_raw"
+                "dhtioc_raw",
             )
         )
         self.file_extension = "txt"
@@ -91,7 +93,8 @@ class DataLogger:
         os.makedirs(path, exist_ok=True)
         if not os.path.exists(path):
             raise FileNotFoundError(
-                f"Could not create directory path: {path}")
+                f"Could not create directory path: {path}"
+            )
 
         # create file
         with open(fname, "w") as f:
