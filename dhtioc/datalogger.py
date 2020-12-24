@@ -129,14 +129,17 @@ class DataLogger:
         """
         dt = when or datetime.datetime.now()
         fname = self.get_daily_file(dt)
-        if not os.path.exists(fname):
-            self.create_file(fname)
-        with open(fname, "a") as f:
-            f.write(
-                f"{dt.timestamp():.02f}"
-                f" {humidity:.01f}"
-                f" {temperature:.01f}\n"
-            )
+        try:
+            if not os.path.exists(fname):
+                self.create_file(fname)
+            with open(fname, "a") as f:
+                f.write(
+                    f"{dt.timestamp():.02f}"
+                    f" {humidity:.01f}"
+                    f" {temperature:.01f}\n"
+                )
+        except Exception as exc:
+            logger.error("Continuing after exception: %s", exc)
 
 
 if __name__ == "__main__":
