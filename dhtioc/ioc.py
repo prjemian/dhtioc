@@ -219,6 +219,9 @@ def main():
         default_prefix='dht:',
         desc=dedent(DHT_IOC.__doc__))
 
+    print(f"PIN: {PIN}")
+    print(f"READ_PERIOD: {READ_PERIOD}")
+
     sensor = DHT_sensor(PIN, READ_PERIOD)
     server = DHT_IOC(sensor=sensor, report_period=REPORT_PERIOD, **ioc_options)
 
