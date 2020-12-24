@@ -11,8 +11,8 @@ __all__ = "SMOOTHING_FACTOR Trend TREND_SMOOTHING_FACTOR".split()
 from .StatsReg import StatsRegClass
 from .utils import smooth
 
-SMOOTHING_FACTOR = 0.72         # factor between 0 and 1, higher is smoother
-TREND_SMOOTHING_FACTOR = 0.95   # applied to the reported trend
+SMOOTHING_FACTOR = 0.72  # factor between 0 and 1, higher is smoother
+TREND_SMOOTHING_FACTOR = 0.95  # applied to the reported trend
 # pick smoothing factors: https://github.com/prjemian/dhtioc/issues/20#issuecomment-672074382
 
 
@@ -30,7 +30,9 @@ class Trend:
 
     def __init__(self):
         """Constructor."""
-        self.cache = {k: None for k in [0.2, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]}
+        self.cache = {
+            k: None for k in [0.2, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95]
+        }
         self.stats = StatsRegClass()
         self.trend = None
         self._computed = False
@@ -44,8 +46,10 @@ class Trend:
         self.stats.Clear()
         self._computed = False
         for factor in self.cache.keys():
-            self.cache[factor] = smooth(reading, factor, self.cache[factor])
-            self.stats.Add(1-factor, self.cache[factor])
+            self.cache[factor] = smooth(
+                reading, factor, self.cache[factor]
+            )
+            self.stats.Add(1 - factor, self.cache[factor])
 
     @property
     def slope(self):

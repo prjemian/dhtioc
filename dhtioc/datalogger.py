@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
-__all__ = ["DataLogger",]
+__all__ = [
+    "DataLogger",
+]
 
 """
 Record raw values in data files.
@@ -17,6 +19,8 @@ import time
 from .__init__ import __version__
 
 logger = logging.getLogger(__name__)
+logger.setLevel("DEBUG")
+
 
 class DataLogger:
     """
@@ -35,12 +39,15 @@ class DataLogger:
 
     def __init__(self, ioc_prefix, path=None):
         """Constructor."""
+        logger.setLevel("DEBUG")
+        logger.info("DataLogger starting for: %s", ioc_prefix)
+        print(f"DataLogger starting for {ioc_prefix}")
         self.prefix = ioc_prefix
         self.base_path = path or os.path.abspath(
             os.path.join(
                 os.environ.get("HOME", os.path.join("/", "home", "pi")),
                 "Documents",
-                "dhtioc_raw"
+                "dhtioc_raw",
             )
         )
         self.file_extension = "txt"
@@ -86,7 +93,8 @@ class DataLogger:
         os.makedirs(path, exist_ok=True)
         if not os.path.exists(path):
             raise FileNotFoundError(
-                f"Could not create directory path: {path}")
+                f"Could not create directory path: {path}"
+            )
 
         # create file
         with open(fname, "w") as f:
@@ -129,14 +137,18 @@ class DataLogger:
         """
         dt = when or datetime.datetime.now()
         fname = self.get_daily_file(dt)
-        if not os.path.exists(fname):
-            self.create_file(fname)
-        with open(fname, "a") as f:
-            f.write(
-                f"{dt.timestamp():.02f}"
-                f" {humidity:.01f}"
-                f" {temperature:.01f}\n"
-            )
+        try:
+            if not os.path.exists(fname):
+                self.create_file(fname)
+            with open(fname, "a") as f:
+                f.write(
+                    f"{dt.timestamp():.02f}"
+                    f" {humidity:.01f}"
+                    f" {temperature:.01f}\n"
+                )
+        except Exception as exc:
+            logger.error("Continuing after exception: %s", exc)
+            print(f"Continuing after exception: {exc}")
 
 
 if __name__ == "__main__":
